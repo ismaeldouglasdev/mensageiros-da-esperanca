@@ -1,4 +1,4 @@
-# 🙏 Mensageiros da Esperança — Sistema de Gestão
+# Mensageiros da Esperança — Sistema de Gestão
 
 Sistema web para digitalizar e centralizar o controle de **cursos, participantes, presenças e atendimentos** da ONG **Mensageiros da Esperança / Praça da Cidadania (Casa de Cultura)**.
 
@@ -198,21 +198,6 @@ Ou conecte o repositório do GitHub em [vercel.com](https://vercel.com) — depl
 
 ---
 
-## 📌 Pendências
-
-- [x] **Autenticação** — implementada tela de login com Firebase Auth e proteção de rotas
-- [ ] **Firebase** — criar projeto, ativar Email/Password Auth e preencher credenciais em `firebase.js`
-- [x] **Identidade Visual** — atualizada para a versão oficial (logo.jpg / v56)
-- [x] **Regionalização** — datas e horários padronizados para o padrão brasileiro (pt-BR)
-- [x] **Ícones nos cards** — adicionados ícones Lucide em todo o sistema
-- [x] **Navegação consistente** — corrigidos links de redirecionamento entre páginas
-- [x] **Proteção de exclusão** — implementada trava que impede excluir curso com alunos inscritos
-- [x] **Edição de curso** — implementado formulário de edição completo
-- [ ] **Depoimento** — coletar depoimento da gestora (Veronica) para o Relatório Final da faculdade
-- [ ] **Deploy** — fazer deploy no Vercel
-
----
-
 ## 📱 Responsivo
 
 O sistema foi desenvolvido com abordagem **mobile-first**:
@@ -237,9 +222,8 @@ As cores podem ser ajustadas facilmente via variáveis CSS em `:root`.
 
 ## 👥 Contato
 
-- **Instituição:** Mensageiros da Esperança / Praça da Cidadania
+- **Instituição:** Mensageiros da Esperança
 - **Presidente:** Veronica Machado
-- **Gestora:** Gisela
 - **Stack:** HTML + CSS + JS + Firebase
 - **Prazo estimado (MVP):** 2 a 3 dias
 
