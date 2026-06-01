@@ -28,7 +28,7 @@ Projeto de Extensão II — Curso de Análise e Desenvolvimento de Sistemas.
 | ---------- | --------------------------------------- |
 | Frontend   | HTML5 + CSS3 + JavaScript (Vanilla)     |
 | Backend    | Firebase Firestore (NoSQL)              |
-| Deploy     | Vercel (planejado)                      |
+| Deploy     | Vercel                                  |
 | Custo      | Gratuito (Firebase Spark + Vercel)      |
 
 ---
