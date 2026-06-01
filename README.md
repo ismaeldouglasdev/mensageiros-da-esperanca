@@ -1,6 +1,6 @@
 # Mensageiros da Esperança — Sistema de Gestão
 
-Sistema web para digitalizar e centralizar o controle de **cursos, participantes, presenças e atendimentos** da ONG **Mensageiros da Esperança / Praça da Cidadania (Casa de Cultura)**.
+Sistema web para digitalizar e centralizar o controle de **cursos, participantes, presenças e atendimentos** da ONG **Mensageiros da Esperança**
 
 Projeto de Extensão II — Curso de Análise e Desenvolvimento de Sistemas.
 
