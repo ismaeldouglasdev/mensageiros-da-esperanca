@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mensageiros da Esperança - Dashboard</title>
+  <link rel="stylesheet" href="style.css?v=1.1">
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="firebase.js?v=1.1"></script>
+  <script>protegerRota();</script>
+</head>
+<body>
+  <header class="header">
+    <div class="header-logo">
+      <img src="logo.jpg" alt="Logo" onerror="this.src='https://via.placeholder.com/40/2E7D32/FFFFFF?text=ME'">
+      <h1>Mensageiros da Esperança</h1>
+    </div>
+    <div style="display: flex; gap: 0.5rem; align-items: center;">
+      <nav class="header-nav" id="navMenu">
+        <a href="index.html" class="ativo">Dashboard</a>
+        <a href="cursos.html">Cursos</a>
+        <a href="inscricoes.html">Inscrições</a>
+        <a href="presenca.html">Presença</a>
+      </nav>
+      <button class="btn btn-sm" id="btnLogout" style="background: rgba(255,255,255,0.15); color: #fff;" title="Sair do Sistema">
+        <i data-lucide="log-out"></i>
+      </button>
+      <button class="menu-toggle" id="menuToggle" aria-label="Abrir menu">
+        <span>☰</span>
+      </button>
+    </div>
+  </header>
+
+  <main class="container">
+    <h2 class="page-title"><i data-lucide="layout-dashboard"></i> Dashboard</h2>
+
+    <div class="loading" id="loading">
+      <div class="spinner"></div>
+      <p>Carregando dados...</p>
+    </div>
+
+    <div id="content" style="display: none;">
+      <div class="cards-grid">
+        <div class="card">
+          <div class="card-icon" style="color: var(--primary)"><i data-lucide="book-open"></i></div>
+          <h3>Cursos Ativos</h3>
+          <p class="valor" id="total-cursos">0</p>
+        </div>
+        <div class="card">
+          <div class="card-icon" style="color: var(--accent)"><i data-lucide="users"></i></div>
+          <h3>Pessoas Atendidas</h3>
+          <p class="valor" id="total-participantes-unicos">0</p>
+          <small id="total-matriculas" style="color: var(--text-light); font-size: 0.75rem;"></small>
+        </div>
+        <div class="card">
+          <div class="card-icon" style="color: var(--secondary)"><i data-lucide="map-pin"></i></div>
+          <h3>Unidades</h3>
+          <p class="valor">3</p>
+        </div>
+        <div class="card">
+          <div class="card-icon" style="color: var(--success)"><i data-lucide="check-circle"></i></div>
+          <h3>Presenças</h3>
+          <p class="valor" id="total-presencas">0</p>
+        </div>
+      </div>
+
+      <section class="table-section">
+        <h3><i data-lucide="clock"></i> Últimas Presenças</h3>
+        <div class="table-container">
+          <table id="presencas-table">
+            <thead>
+              <tr>
+                <th>Data</th>
+                <th>Participante</th>
+                <th>Curso</th>
+                <th>Unidade</th>
+              </tr>
+            </thead>
+            <tbody id="presencas-tbody"></tbody>
+          </table>
+          <div class="empty-state" id="empty-presencas" style="display: none;">
+            <i data-lucide="calendar-x" class="icon"></i>
+            <p>Nenhuma presença registrada ainda.</p>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <div id="toast" class="toast" style="display: none;"></div>
+  </main>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      lucide.createIcons();
+      
+      const loading = document.getElementById('loading');
+      const btnLogout = document.getElementById('btnLogout');
+      const menuToggle = document.getElementById('menuToggle');
+      const navMenu = document.getElementById('navMenu');
+
+      menuToggle?.addEventListener('click', () => {
+        navMenu.classList.toggle('aberto');
+      });
+      
+      btnLogout?.addEventListener('click', async () => {
+        if (confirm('Deseja realmente sair do sistema?')) {
+          await authAPI.logout();
+          window.location.href = 'login.html';
+        }
+      });
+
+      const content = document.getElementById('content');
+      const toast = document.getElementById('toast');
+      const totalCursosEl = document.getElementById('total-cursos');
+      const totalPresencasEl = document.getElementById('total-presencas');
+      const presencasTbody = document.getElementById('presencas-tbody');
+      const emptyPresencasEl = document.getElementById('empty-presencas');
+      const presencasTable = document.getElementById('presencas-table');
+
+      const showToast = (message, type = 'success') => {
+        toast.textContent = message;
+        toast.className = `toast toast-${type}`;
+        toast.style.display = 'block';
+        setTimeout(() => {
+          toast.style.display = 'none';
+        }, 3000);
+      };
+
+      try {
+        const [cursos, totalParticipantes, totalUnicos, totalPresencasCount, ultimasPresencas] = await Promise.all([
+          cursosAPI.listar(),
+          participantesAPI.contar(),
+          participantesAPI.contarUnicos(),
+          presencasAPI.contarTodas(),
+          presencasAPI.ultimasPresencasConfirmadas(10)
+        ]);
+
+        totalCursosEl.textContent = cursos.length;
+        document.getElementById('total-participantes-unicos').textContent = totalUnicos;
+        document.getElementById('total-matriculas').textContent = `${totalParticipantes} matrículas ativas`;
+        totalPresencasEl.textContent = totalPresencasCount;
+
+        if (ultimasPresencas.length === 0) {
+          emptyPresencasEl.style.display = 'block';
+          presencasTable.style.display = 'none';
+        } else {
+          presencasTbody.innerHTML = '';
+          for (const presenca of ultimasPresencas) {
+            const tr = document.createElement('tr');
+            const dataFormatada = formatarDataBR(presenca.data || presenca.createdAt);
+            
+            let cursoNome = presenca.cursoNome;
+            let unidade = presenca.unidade;
+            if (!cursoNome) {
+              const curso = cursos.find(c => c.id === presenca.cursoId);
+              if (!curso) continue; 
+              cursoNome = curso.nome;
+              unidade = curso.unidade;
+            }
+
+            tr.innerHTML = `
+              <td>${dataFormatada}</td>
+              <td>${presenca.participanteNome || 'N/A'}</td>
+              <td>${cursoNome}</td>
+              <td><span class="badge badge-primary">${unidade}</span></td>
+            `;
+            presencasTbody.appendChild(tr);
+          }
+        }
+
+        loading.style.display = 'none';
+        content.style.display = 'block';
+        lucide.createIcons();
+      } catch (error) {
+        console.error('Erro ao carregar dados:', error);
+        showToast('Erro ao carregar dados do dashboard.', 'error');
+        loading.style.display = 'none';
+        content.style.display = 'block';
+      }
+    });
+  </script>
+</body>
+</html>

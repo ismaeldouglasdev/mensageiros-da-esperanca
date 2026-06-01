@@ -1,0 +1,12 @@
+// Configuração do Firebase
+// Copie este arquivo como firebase.config.js e preencha com suas credenciais
+// firebase.config.js está no .gitignore — NUNCA commite credenciais reais
+
+const firebaseConfig = {
+  apiKey: "SUA_API_KEY",
+  authDomain: "SEU_PROJETO.firebaseapp.com",
+  projectId: "SEU_PROJECT_ID",
+  storageBucket: "SEU_PROJETO.firebasestorage.app",
+  messagingSenderId: "SEU_SENDER_ID",
+  appId: "SEU_APP_ID"
+};

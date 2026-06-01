@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login - Mensageiros da Esperança</title>
+  <link rel="stylesheet" href="style.css?v=1.1">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    body {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+    }
+    .login-container {
+      width: 100%;
+      max-width: 400px;
+      padding: 1.5rem;
+    }
+    .login-card {
+      background: #fff;
+      padding: 2.5rem 2rem;
+      border-radius: var(--radius);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+      text-align: center;
+    }
+    .login-logo {
+      width: auto;
+      height: 80px;
+      margin-bottom: 1.5rem;
+      border-radius: var(--radius-sm);
+      object-fit: contain;
+      border: 1px solid var(--border);
+      padding: 5px;
+      background: #fff;
+    }
+    .login-card h1 {
+      font-size: 1.8rem;
+      color: var(--primary-dark);
+      margin-bottom: 0.5rem;
+    }
+    .login-card p {
+      color: var(--text-light);
+      font-size: 0.9rem;
+      margin-bottom: 2rem;
+    }
+    .error-msg {
+      background: #FFEBEE;
+      color: var(--danger);
+      padding: 0.75rem;
+      border-radius: var(--radius-sm);
+      margin-bottom: 1.5rem;
+      font-size: 0.85rem;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="login-container">
+    <div class="login-card">
+      <img src="logo.jpg" alt="Logo" class="login-logo" onerror="this.src='https://via.placeholder.com/150x80/2E7D32/FFFFFF?text=Mensageiros'">
+      <h1>Login</h1>
+      <p>Sistema de Gestão</p>
+
+      <div id="errorMsg" class="error-msg"></div>
+
+      <form id="loginForm">
+        <div class="form-group" style="text-align: left;">
+          <label for="email">E-mail</label>
+          <input type="email" id="email" required placeholder="seu@email.com">
+        </div>
+        <div class="form-group" style="text-align: left;">
+          <label for="senha">Senha</label>
+          <input type="password" id="senha" required placeholder="••••••••">
+        </div>
+        <button type="submit" class="btn btn-primary btn-block" id="btnLogin">
+          <i data-lucide="log-in"></i> Entrar no Sistema
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+  <script src="firebase.js"></script>
+
+  <script>
+    lucide.createIcons();
+
+    const loginForm = document.getElementById('loginForm');
+    const errorMsg = document.getElementById('errorMsg');
+    const btnLogin = document.getElementById('btnLogin');
+
+    // Se já estiver logado, vai direto para o dashboard
+    protegerRota();
+
+    loginForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const email = document.getElementById('email').value.trim();
+      const senha = document.getElementById('senha').value;
+
+      errorMsg.style.display = 'none';
+      btnLogin.disabled = true;
+      btnLogin.innerHTML = '<i data-lucide="loader" class="spinner"></i> Verificando...';
+      lucide.createIcons();
+
+      try {
+        await authAPI.login(email, senha);
+        window.location.href = 'index.html';
+      } catch (error) {
+        console.error('Erro de login:', error);
+        errorMsg.textContent = 'E-mail ou senha incorretos. Verifique e tente novamente.';
+        errorMsg.style.display = 'block';
+        btnLogin.disabled = false;
+        btnLogin.innerHTML = '<i data-lucide="log-in"></i> Entrar no Sistema';
+        lucide.createIcons();
+      }
+    });
+  </script>
+
+</body>
+</html>

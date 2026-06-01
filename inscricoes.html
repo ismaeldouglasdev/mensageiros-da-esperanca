@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Inscrições - Mensageiros da Esperança</title>
+  <link rel="stylesheet" href="style.css?v=1.1">
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="https://cdn.sheetjs.com/xlsx-0.20.0/package/dist/xlsx.full.min.js"></script>
+  <script src="firebase.js?v=1.1"></script>
+  <script>protegerRota();</script>
+</head>
+<body>
+
+  <header class="header">
+    <div class="header-logo">
+      <img src="logo.jpg" alt="Logo" onerror="this.src='https://via.placeholder.com/40/2E7D32/FFFFFF?text=ME'">
+      <h1>Mensageiros da Esperança</h1>
+    </div>
+    <div style="display: flex; gap: 0.5rem; align-items: center;">
+      <nav class="header-nav" id="navMenu">
+        <a href="index.html">Dashboard</a>
+        <a href="cursos.html">Cursos</a>
+        <a href="inscricoes.html" class="ativo">Inscrições</a>
+        <a href="presenca.html">Presença</a>
+      </nav>
+      <button class="btn btn-sm" id="btnLogout" style="background: rgba(255,255,255,0.15); color: #fff;" title="Sair do Sistema">
+        <i data-lucide="log-out"></i>
+      </button>
+      <button class="menu-toggle" id="menuToggle" aria-label="Abrir menu">
+        <span>☰</span>
+      </button>
+    </div>
+  </header>
+
+  <main class="container">
+    <h2 class="page-title"><i data-lucide="user-plus"></i> Inscrições de Participantes</h2>
+
+    <div class="form-card">
+      <h2>Nova Inscrição</h2>
+      <form id="formInscricao">
+        <div class="form-group">
+          <label for="nome">Nome Completo</label>
+          <input type="text" id="nome" required placeholder="Digite o nome completo">
+        </div>
+        <div class="form-group">
+          <label for="contato">Contato (Telefone ou E-mail)</label>
+          <input type="text" id="contato" required placeholder="(00) 00000-0000 ou email@exemplo.com">
+        </div>
+        <div class="form-group">
+          <label>Cursos (Selecione um ou mais)</label>
+          <div id="listaCursosCheck" style="max-height: 150px; overflow-y: auto; border: 2px solid var(--border); border-radius: var(--radius-sm); padding: 0.5rem; background: #fff;">
+            <!-- Checkboxes serão inseridos aqui -->
+          </div>
+          <small id="vagasInfo" style="display:none;margin-top:0.3rem;font-size:0.8rem;color:var(--text-light);"></small>
+        </div>
+        <button type="submit" class="btn btn-primary btn-block" id="btnSubmit">Realizar Inscrição</button>
+      </form>
+    </div>
+
+    <div class="form-card">
+      <h2><i data-lucide="filter"></i> Filtro</h2>
+      <div class="form-row">
+        <div class="form-group" style="flex: 1;">
+          <label for="filtroCurso">Visualizar Participantes por Curso</label>
+          <select id="filtroCurso">
+            <option value="">Todos os cursos</option>
+          </select>
+        </div>
+        <div class="form-group" style="display: flex; flex-direction: column; justify-content: flex-end;">
+          <label style="visibility: hidden;">&nbsp;</label>
+          <button class="btn btn-secondary" onclick="exportarExcel()" id="btnExportar" title="Exportar dados da tabela para planilha Excel">
+            <i data-lucide="file-spreadsheet"></i> Exportar Excel
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="table-container">
+      <div id="batchActions" style="display:none; padding: 1rem; background: #fff3e0; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 1rem;">
+        <span id="batchCount" style="font-weight: 600; color: var(--primary-dark);"></span>
+        <button class="btn btn-danger btn-sm" id="btnDeleteBatch">
+          <i data-lucide="trash-2"></i> Excluir Selecionados
+        </button>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th style="width: 40px;"><input type="checkbox" id="selecionarTodos" style="width: 18px; height: 18px; cursor: pointer;"></th>
+            <th>Nome</th>
+            <th>Contato</th>
+            <th>Curso</th>
+            <th>Data de Inscrição</th>
+            <th>Ações</th>
+          </tr>
+        </thead>
+        <tbody id="tabelaParticipantes">
+          <tr>
+            <td colspan="6" class="loading">
+              <div class="spinner"></div>
+              <p>Carregando participantes...</p>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div id="emptyState" class="empty-state" style="display:none;">
+      <i data-lucide="users-2" class="icon"></i>
+      <p>Nenhum participante encontrado para este curso.</p>
+    </div>
+
+  </main>
+
+  <!-- Modal de Edição -->
+  <div id="modalEdicao" class="modal" style="display:none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); align-items: center; justify-content: center;">
+    <div class="modal-content" style="background-color: #fff; padding: 2rem; border-radius: var(--radius); width: 90%; max-width: 500px; box-shadow: var(--shadow);">
+      <h2 style="margin-bottom: 1.5rem; color: var(--primary-dark); display: flex; align-items: center; gap: 0.5rem;">
+        <i data-lucide="edit-3"></i> Editar Participante
+      </h2>
+      <form id="formEdicao">
+        <input type="hidden" id="editParticipanteId">
+        <div class="form-group">
+          <label for="editNome">Nome Completo</label>
+          <input type="text" id="editNome" required>
+        </div>
+        <div class="form-group">
+          <label for="editContato">Contato</label>
+          <input type="text" id="editContato" required>
+        </div>
+        <div class="form-group">
+          <label for="editCursoSelect">Curso</label>
+          <select id="editCursoSelect" required></select>
+        </div>
+        <div style="display: flex; gap: 1rem; margin-top: 2rem;">
+          <button type="submit" class="btn btn-primary btn-block" id="btnSalvarEdicao">Salvar Alterações</button>
+          <button type="button" class="btn btn-secondary btn-block" onclick="fecharModal()">Cancelar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div id="toast" class="toast" style="display:none;"></div>
+
+  <script>
+    let cursosCache = [];
+    let participantesCache = [];
+
+    const btnLogout = document.getElementById('btnLogout');
+    btnLogout?.addEventListener('click', async () => {
+      if (confirm('Deseja realmente sair do sistema?')) {
+        await authAPI.logout();
+        window.location.href = 'login.html';
+      }
+    });
+
+    function mostrarToast(msg, tipo = 'success') {
+      const toast = document.getElementById('toast');
+      toast.textContent = msg;
+      toast.className = 'toast toast-' + tipo;
+      toast.style.display = 'block';
+      setTimeout(() => { toast.style.display = 'none'; }, 3000);
+    }
+
+    async function carregarCursos() {
+      try {
+        cursosCache = await cursosAPI.listar();
+        const listaCheck = document.getElementById('listaCursosCheck');
+        const filtroCurso = document.getElementById('filtroCurso');
+
+        let htmlCheck = '';
+        let opcoesFiltro = '<option value="">Todos os cursos</option>';
+
+        cursosCache.forEach(c => {
+          const label = c.nome + ' - ' + formatarDataBR(c.data);
+          htmlCheck += `
+            <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.25rem;">
+              <input type="checkbox" name="curso" value="${c.id}" id="c_${c.id}" style="width: 16px; height: 16px;">
+              <label for="c_${c.id}" style="font-weight: normal; margin-bottom: 0; cursor: pointer;">${label}</label>
+            </div>
+          `;
+          opcoesFiltro += '<option value="' + c.id + '">' + c.nome + '</option>';
+        });
+
+        listaCheck.innerHTML = htmlCheck || '<p style="font-size: 0.8rem; color: var(--text-light);">Nenhum curso disponível.</p>';
+        filtroCurso.innerHTML = opcoesFiltro;
+      } catch (e) {
+        mostrarToast('Erro ao carregar cursos: ' + e.message, 'error');
+      }
+    }
+
+    async function carregarParticipantes(cursoId = null) {
+      const tbody = document.getElementById('tabelaParticipantes');
+      const emptyState = document.getElementById('emptyState');
+
+      tbody.innerHTML = '<tr><td colspan="6" class="loading"><div class="spinner"></div><p>Carregando...</p></td></tr>';
+      emptyState.style.display = 'none';
+
+      try {
+        participantesCache = await participantesAPI.listar(cursoId);
+
+        if (participantesCache.length === 0) {
+          tbody.innerHTML = '';
+          emptyState.style.display = 'block';
+          lucide.createIcons();
+          return;
+        }
+
+        let html = '';
+        participantesCache.forEach(p => {
+          const curso = cursosCache.find(c => c.id === p.cursoId);
+          const cursoNome = curso ? curso.nome : '-';
+          html += '<tr>';
+          html += '<td><input type="checkbox" class="participante-checkbox" data-id="' + p.id + '" style="width: 18px; height: 18px; cursor: pointer;"></td>';
+          html += '<td>' + p.nome + '</td>';
+          html += '<td>' + p.contato + '</td>';
+          html += '<td><span class="badge badge-primary">' + cursoNome + '</span></td>';
+          html += '<td>' + formatarDataBR(p.dataInscricao) + '</td>';
+          html += '<td>';
+          html += '<div style="display: flex; gap: 0.5rem;">';
+          html += '<button class="btn btn-secondary btn-sm" onclick="abrirEdicao(\'' + p.id + '\')" title="Editar"><i data-lucide="edit-3"></i></button>';
+          html += '<button class="btn btn-danger btn-sm" onclick="removerParticipante(\'' + p.id + '\')" title="Excluir"><i data-lucide="trash-2"></i></button>';
+          html += '</div>';
+          html += '</td>';
+          html += '</tr>';
+        });
+
+        tbody.innerHTML = html;
+        lucide.createIcons();
+        atualizarUISelecao();
+      } catch (e) {
+        tbody.innerHTML = '<tr><td colspan="6" class="loading">Erro ao carregar participantes</td></tr>';
+        mostrarToast('Erro ao carregar participantes: ' + e.message, 'error');
+      }
+    }
+
+    async function abrirEdicao(id) {
+      try {
+        const p = await participantesAPI.obter(id);
+        if (!p) return;
+
+        document.getElementById('editParticipanteId').value = id;
+        document.getElementById('editNome').value = p.nome;
+        document.getElementById('editContato').value = p.contato;
+        
+        let selectHtml = '<option value="">Selecione um curso</option>';
+        cursosCache.forEach(c => {
+          selectHtml += `<option value="${c.id}">${c.nome}</option>`;
+        });
+        
+        const select = document.getElementById('editCursoSelect');
+        select.innerHTML = selectHtml;
+        select.value = p.cursoId;
+
+        document.getElementById('modalEdicao').style.display = 'flex';
+        lucide.createIcons();
+      } catch (e) {
+        mostrarToast('Erro ao buscar dados: ' + e.message, 'error');
+      }
+    }
+
+    function fecharModal() {
+      document.getElementById('modalEdicao').style.display = 'none';
+    }
+
+    document.getElementById('formEdicao').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const id = document.getElementById('editParticipanteId').value;
+      const nome = document.getElementById('editNome').value.trim();
+      const contato = document.getElementById('editContato').value.trim();
+      const cursoId = document.getElementById('editCursoSelect').value;
+
+      const btn = document.getElementById('btnSalvarEdicao');
+      btn.disabled = true;
+      btn.textContent = 'Salvando...';
+
+      try {
+        await participantesAPI.atualizar(id, { nome, contato, cursoId });
+        mostrarToast('Dados atualizados com sucesso!');
+        fecharModal();
+        const filtroCurso = document.getElementById('filtroCurso');
+        carregarParticipantes(filtroCurso.value || null);
+      } catch (e) {
+        mostrarToast('Erro ao atualizar: ' + e.message, 'error');
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Salvar Alterações';
+      }
+    });
+
+    function atualizarUISelecao() {
+      const cbs = document.querySelectorAll('.participante-checkbox');
+      const selecionados = document.querySelectorAll('.participante-checkbox:checked');
+      const batchActions = document.getElementById('batchActions');
+      const batchCount = document.getElementById('batchCount');
+      const selectAll = document.getElementById('selecionarTodos');
+
+      if (selecionados.length > 0) {
+        batchActions.style.display = 'flex';
+        batchCount.textContent = selecionados.length + ' selecionado(s)';
+      } else {
+        batchActions.style.display = 'none';
+      }
+
+      if (selectAll) {
+        selectAll.checked = cbs.length > 0 && selecionados.length === cbs.length;
+      }
+      
+      cbs.forEach(cb => {
+        cb.onchange = atualizarUISelecao;
+      });
+    }
+
+    document.getElementById('selecionarTodos')?.addEventListener('change', (e) => {
+      const isChecked = e.target.checked;
+      document.querySelectorAll('.participante-checkbox').forEach(cb => {
+        cb.checked = isChecked;
+      });
+      atualizarUISelecao();
+    });
+
+    document.getElementById('btnDeleteBatch')?.addEventListener('click', async () => {
+      const selecionados = document.querySelectorAll('.participante-checkbox:checked');
+      if (selecionados.length === 0) return;
+
+      if (!confirm('Tem certeza que deseja excluir ' + selecionados.length + ' participantes?')) return;
+
+      const btn = document.getElementById('btnDeleteBatch');
+      btn.disabled = true;
+      btn.textContent = 'Excluindo...';
+
+      try {
+        for (const cb of selecionados) {
+          await participantesAPI.remover(cb.getAttribute('data-id'));
+        }
+        mostrarToast('Participantes excluídos com sucesso!');
+        const filtroCurso = document.getElementById('filtroCurso');
+        carregarParticipantes(filtroCurso.value || null);
+      } catch (e) {
+        mostrarToast('Erro ao excluir em lote: ' + e.message, 'error');
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = '<i data-lucide="trash-2"></i> Excluir Selecionados';
+        lucide.createIcons();
+      }
+    });
+
+    async function removerParticipante(id) {
+      if (!confirm('Tem certeza que deseja excluir este participante?')) return;
+
+      try {
+        await participantesAPI.remover(id);
+        mostrarToast('Participante removido com sucesso!');
+        const filtroCurso = document.getElementById('filtroCurso');
+        carregarParticipantes(filtroCurso.value || null);
+      } catch (e) {
+        mostrarToast('Erro ao remover participante: ' + e.message, 'error');
+      }
+    }
+
+    // ==================== EXPORTAR EXCEL ====================
+    function exportarExcel() {
+      const btn = document.getElementById('btnExportar');
+      const originalText = btn.innerHTML;
+
+      try {
+        btn.disabled = true;
+        btn.innerHTML = 'Gerando...';
+
+        const dados = participantesCache;
+        if (dados.length === 0) {
+          mostrarToast('Nenhum dado para exportar.', 'info');
+          return;
+        }
+
+        // Monta as linhas da planilha
+        const linhas = dados.map(p => {
+          const curso = cursosCache.find(c => c.id === p.cursoId);
+          const cursoNome = curso ? curso.nome : '-';
+
+          // Formata a data de inscrição
+          let dataFormatada = '-';
+          if (p.dataInscricao) {
+            const d = p.dataInscricao.toDate ? p.dataInscricao.toDate() : new Date(p.dataInscricao);
+            if (!isNaN(d.getTime())) {
+              const dia = String(d.getDate()).padStart(2, '0');
+              const mes = String(d.getMonth() + 1).padStart(2, '0');
+              const ano = d.getFullYear();
+              const h = String(d.getHours()).padStart(2, '0');
+              const min = String(d.getMinutes()).padStart(2, '0');
+              dataFormatada = `${dia}/${mes}/${ano} ${h}:${min}`;
+            }
+          }
+
+          return {
+            'Nome': p.nome || '-',
+            'Contato': p.contato || '-',
+            'Curso': cursoNome,
+            'Data de Inscrição': dataFormatada
+          };
+        });
+
+        // Cria a planilha com SheetJS
+        const ws = XLSX.utils.json_to_sheet(linhas);
+
+        // Ajusta largura das colunas
+        ws['!cols'] = [
+          { wch: 40 }, // Nome
+          { wch: 30 }, // Contato
+          { wch: 30 }, // Curso
+          { wch: 22 }, // Data de Inscrição
+        ];
+
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, 'Inscrições');
+
+        // Nome do arquivo com data atual
+        const hoje = new Date();
+        const dataStr = `${hoje.getFullYear()}-${String(hoje.getMonth()+1).padStart(2,'0')}-${String(hoje.getDate()).padStart(2,'0')}`;
+        const nomeArquivo = `inscricoes_mensageiros_${dataStr}.xlsx`;
+
+        // Gera o download
+        XLSX.writeFile(wb, nomeArquivo);
+
+        mostrarToast(`Planilha exportada: ${nomeArquivo}`, 'success');
+      } catch (e) {
+        mostrarToast('Erro ao exportar Excel: ' + e.message, 'error');
+        console.error('Erro exportação:', e);
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = originalText;
+        if (typeof lucide !== 'undefined') lucide.createIcons();
+      }
+    }
+
+    document.getElementById('formInscricao').addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const nome = document.getElementById('nome').value.trim();
+      const contato = document.getElementById('contato').value.trim();
+      const cursosSelecionados = Array.from(document.querySelectorAll('input[name="curso"]:checked')).map(cb => cb.value);
+
+      if (!nome || !contato || cursosSelecionados.length === 0) {
+        mostrarToast('Preencha nome, contato e selecione ao menos um curso.', 'error');
+        return;
+      }
+
+      const isEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(contato);
+      const isPhone = /^(\(?\d{2}\)?\s?)?(\d{4,5}-?\d{4})$/.test(contato.replace(/\s/g, ''));
+      
+      if (!isEmail && !isPhone) {
+        mostrarToast('Contato inválido. Use um e-mail real ou telefone com DDD.', 'error');
+        return;
+      }
+
+      const btnSubmit = document.getElementById('btnSubmit');
+      btnSubmit.disabled = true;
+      btnSubmit.textContent = 'Inscrevendo...';
+
+      try {
+        const inscritosAtuais = await participantesAPI.listar();
+        let novos = 0;
+        let pulados = 0;
+
+        for (const cursoId of cursosSelecionados) {
+          const jaExiste = inscritosAtuais.find(p => 
+            p.cursoId === cursoId && 
+            p.nome && nome && p.nome.toLowerCase().trim() === nome.toLowerCase().trim() &&
+            p.contato && contato && p.contato.replace(/\D/g, '') === contato.replace(/\D/g, '')
+          );
+
+          if (!jaExiste) {
+            await participantesAPI.adicionar({ nome, contato, cursoId });
+            novos++;
+          } else {
+            pulados++;
+          }
+        }
+
+        if (novos > 0) mostrarToast(`Inscrição realizada em ${novos} curso(s)!`);
+        if (pulados > 0) mostrarToast(`${pulados} inscrição(ões) ignorada(s) por já existirem.`, 'info');
+
+        document.getElementById('formInscricao').reset();
+        carregarParticipantes(document.getElementById('filtroCurso').value || null);
+      } catch (e) {
+        mostrarToast('Erro ao realizar inscrição: ' + e.message, 'error');
+      } finally {
+        btnSubmit.disabled = false;
+        btnSubmit.textContent = 'Realizar Inscrição';
+      }
+    });
+
+    document.getElementById('filtroCurso').addEventListener('change', (e) => {
+      carregarParticipantes(e.target.value || null);
+    });
+
+    document.getElementById('menuToggle').addEventListener('click', () => {
+      document.getElementById('navMenu').classList.toggle('aberto');
+    });
+
+    document.addEventListener('DOMContentLoaded', () => {
+      lucide.createIcons();
+      carregarCursos().then(() => {
+        carregarParticipantes();
+      });
+    });
+  </script>
+
+</body>
+</html>

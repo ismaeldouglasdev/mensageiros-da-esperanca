@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Presença - Mensageiros da Esperança</title>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+  <link rel="stylesheet" href="style.css?v=1.1">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="firebase.js?v=1.1"></script>
+  <script>protegerRota();</script>
+</head>
+<body>
+
+  <header class="header">
+    <div class="header-logo">
+      <img src="logo.jpg" alt="Logo" onerror="this.src='https://via.placeholder.com/40/2E7D32/FFFFFF?text=ME'">
+      <h1>Mensageiros da Esperança</h1>
+    </div>
+    <div style="display: flex; gap: 0.5rem; align-items: center;">
+      <nav class="header-nav" id="navMenu">
+        <a href="index.html">Dashboard</a>
+        <a href="cursos.html">Cursos</a>
+        <a href="inscricoes.html">Inscrições</a>
+        <a href="presenca.html" class="ativo">Presença</a>
+      </nav>
+      <button class="btn btn-sm" id="btnLogout" style="background: rgba(255,255,255,0.15); color: #fff;" title="Sair do Sistema">
+        <i data-lucide="log-out"></i>
+      </button>
+      <button class="menu-toggle" id="menuToggle" aria-label="Abrir menu">
+        <span>☰</span>
+      </button>
+    </div>
+  </header>
+
+  <main class="container">
+    <h2 class="page-title"><i data-lucide="check-square"></i> Lista de Presença</h2>
+
+    <div class="form-card">
+      <h2>Selecionar Curso e Data</h2>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="cursoSelect">Curso</label>
+          <select id="cursoSelect">
+            <option value="">Selecione um curso...</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="dataInput">Data da Aula</label>
+          <input type="date" id="dataInput">
+        </div>
+      </div>
+      <button class="btn btn-primary btn-block" id="carregarBtn"><i data-lucide="refresh-cw"></i> Carregar Lista</button>
+    </div>
+
+    <div id="listaContainer" style="display: none;">
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>Participante</th>
+              <th style="display: flex; align-items: center; gap: 0.5rem;">
+                Presença
+                <input type="checkbox" id="selecionarTodos" title="Selecionar todos" style="width: 18px; height: 18px; cursor: pointer;">
+              </th>
+            </tr>
+          </thead>
+          <tbody id="presencaTableBody"></tbody>
+        </table>
+      </div>
+
+      <div style="margin-top: 1.5rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+        <div id="contadorPresenca" style="font-weight: 600; color: var(--primary-dark); font-size: 1.1rem;"></div>
+        <button class="btn btn-primary" id="salvarBtn"><i data-lucide="save"></i> Salvar Presenças</button>
+      </div>
+    </div>
+
+    <div id="emptyState" class="empty-state">
+      <i data-lucide="list-checks" class="icon"></i>
+      <p>Selecione um curso e uma data para carregar a lista de chamadas.</p>
+    </div>
+
+    <div id="loading" class="loading" style="display: none;">
+      <div class="spinner"></div>
+      <p>Carregando participantes...</p>
+    </div>
+
+    <div id="toast" class="toast" style="display: none;"></div>
+  </main>
+
+  <script>
+    const btnLogout = document.getElementById('btnLogout');
+    btnLogout?.addEventListener('click', async () => {
+      if (confirm('Deseja realmente sair do sistema?')) {
+        await authAPI.logout();
+        window.location.href = 'login.html';
+      }
+    });
+
+    let cursoAtualId = null;
+    let dataAtual = null;
+    let listaParticipantes = [];
+    let presencasSalvas = [];
+
+    function definirDataHoje() {
+      const hoje = new Date().toISOString().split('T')[0];
+      document.getElementById('dataInput').value = hoje;
+    }
+
+    function mostrarToast(msg, tipo = 'success') {
+      const toast = document.getElementById('toast');
+      toast.textContent = msg;
+      toast.className = 'toast toast-' + tipo;
+      toast.style.display = 'block';
+      setTimeout(() => { toast.style.display = 'none'; }, 3000);
+    }
+
+    async function carregarCursos() {
+      try {
+        const cursos = await cursosAPI.listar();
+        const select = document.getElementById('cursoSelect');
+        select.innerHTML = '<option value="">Selecione um curso...</option>';
+        cursos.forEach(c => {
+          const opt = document.createElement('option');
+          opt.value = c.id;
+          const dataFmt = formatarDataBR(c.data);
+          opt.textContent = c.nome + ' - ' + dataFmt;
+          select.appendChild(opt);
+        });
+      } catch (e) {
+        mostrarToast('Erro ao carregar cursos', 'error');
+      }
+    }
+
+    function atualizarContador() {
+      const checks = document.querySelectorAll('.presenca-checkbox');
+      const total = checks.length;
+      const presentes = document.querySelectorAll('.presenca-checkbox:checked').length;
+      document.getElementById('contadorPresenca').innerHTML = `<i data-lucide="users" style="width:18px;vertical-align:middle"></i> ${presentes} presentes de ${total} inscritos`;
+      lucide.createIcons();
+    }
+
+    function renderizarLista() {
+      const tbody = document.getElementById('presencaTableBody');
+      const selectAllCb = document.getElementById('selecionarTodos');
+      tbody.innerHTML = '';
+      if (selectAllCb) selectAllCb.checked = false;
+
+      if (listaParticipantes.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="2" style="text-align:center; padding:3rem; color:var(--text-light);">Nenhum participante inscrito neste curso</td></tr>';
+        document.getElementById('contadorPresenca').textContent = '';
+        return;
+      }
+
+      listaParticipantes.forEach(p => {
+        const jaSalva = presencasSalvas.find(ps => ps.participanteId === p.id);
+        const marcado = jaSalva ? jaSalva.presente : false;
+
+        const tr = document.createElement('tr');
+        tr.innerHTML = `<td>${p.nome}</td>
+          <td><input type="checkbox" class="presenca-checkbox" data-id="${p.id}" ${marcado ? 'checked' : ''}></td>`;
+        tbody.appendChild(tr);
+      });
+
+      tbody.querySelectorAll('.presenca-checkbox').forEach(cb => {
+        cb.addEventListener('change', () => {
+          atualizarContador();
+          // Desmarca o "Selecionar Todos" se algum for desmarcado manualmente
+          if (!cb.checked && selectAllCb) selectAllCb.checked = false;
+          // Marca o "Selecionar Todos" se todos forem marcados manualmente
+          if (selectAllCb && document.querySelectorAll('.presenca-checkbox:checked').length === listaParticipantes.length) {
+            selectAllCb.checked = true;
+          }
+        });
+      });
+
+      // Lógica do Selecionar Todos
+      selectAllCb?.addEventListener('change', (e) => {
+        const isChecked = e.target.checked;
+        document.querySelectorAll('.presenca-checkbox').forEach(cb => {
+          cb.checked = isChecked;
+        });
+        atualizarContador();
+      });
+
+      atualizarContador();
+    }
+
+    document.getElementById('carregarBtn').addEventListener('click', async function() {
+      const cursoId = document.getElementById('cursoSelect').value;
+      const data = document.getElementById('dataInput').value;
+
+      if (!cursoId || !data) {
+        mostrarToast('Selecione o curso e a data', 'error');
+        return;
+      }
+
+      cursoAtualId = cursoId;
+      dataAtual = data;
+
+      document.getElementById('loading').style.display = 'block';
+      document.getElementById('listaContainer').style.display = 'none';
+      document.getElementById('emptyState').style.display = 'none';
+
+      try {
+        listaParticipantes = await participantesAPI.listar(cursoId);
+        presencasSalvas = await presencasAPI.listar(cursoId, data);
+        renderizarLista();
+        document.getElementById('listaContainer').style.display = 'block';
+      } catch (e) {
+        mostrarToast('Erro ao carregar lista', 'error');
+      } finally {
+        document.getElementById('loading').style.display = 'none';
+      }
+    });
+
+    document.getElementById('salvarBtn').addEventListener('click', async function() {
+      if (!cursoAtualId || !dataAtual) return;
+
+      const registros = [];
+      document.querySelectorAll('.presenca-checkbox').forEach(cb => {
+        const participante = listaParticipantes.find(p => p.id === cb.getAttribute('data-id'));
+        if (participante) {
+          registros.push({
+            participanteId: participante.id,
+            participanteNome: participante.nome,
+            presente: cb.checked
+          });
+        }
+      });
+
+      const btn = document.getElementById('salvarBtn');
+      btn.disabled = true;
+      btn.textContent = 'Salvando...';
+
+      try {
+        await presencasAPI.salvarLista(cursoAtualId, dataAtual, registros);
+        mostrarToast('Presenças salvas com sucesso!', 'success');
+      } catch (e) {
+        mostrarToast('Erro ao salvar presenças', 'error');
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = '<i data-lucide="save"></i> Salvar Presenças';
+        lucide.createIcons();
+      }
+    });
+
+    document.getElementById('menuToggle').addEventListener('click', function() {
+      document.getElementById('navMenu').classList.toggle('aberto');
+    });
+
+    document.addEventListener('DOMContentLoaded', function() {
+      lucide.createIcons();
+      definirDataHoje();
+      carregarCursos();
+    });
+  </script>
+
+</body>
+</html>

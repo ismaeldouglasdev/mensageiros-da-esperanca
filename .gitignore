@@ -1,0 +1,4 @@
+.vercel
+
+# Firebase config (contém credenciais do projeto)
+firebase.config.js
