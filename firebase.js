@@ -34,12 +34,13 @@ const authAPI = {
 const protegerRota = () => {
   auth.onAuthStateChanged((user) => {
     if (!user) {
-      // Se não estiver na página de login e não estiver logado, redireciona
-      if (!window.location.pathname.includes('login.html') && !window.location.pathname.includes('index.html') && !window.location.pathname.endsWith('/mensageiros-da-esperanca/') && !window.location.pathname.endsWith('/mensageiros-da-esperanca')) {
+      const isPublicPage =
+        window.location.pathname.includes('login.html') ||
+        window.location.pathname.includes('index.html') ||
+        window.location.pathname.endsWith('/mensageiros-da-esperanca/') ||
+        window.location.pathname.endsWith('/mensageiros-da-esperanca');
+      if (!isPublicPage) {
         window.location.href = 'login.html';
-      }
-      if (window.location.pathname.includes('login.html') || window.location.pathname.includes('index.html') || window.location.pathname.endsWith('/mensageiros-da-esperanca/') || window.location.pathname.endsWith('/mensageiros-da-esperanca')) {
-        window.location.href = 'dashboard.html';
       }
     }
   });

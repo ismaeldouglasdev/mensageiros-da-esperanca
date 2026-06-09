@@ -9,8 +9,8 @@
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      background: #f5f5f0;
-      color: #1a1a1a;
+      background: #F8F9FA;
+      color: #2D3436;
       line-height: 1.6;
       min-height: 100vh;
       display: flex;
@@ -23,9 +23,11 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 1rem 2rem;
-      background: #2e7d32;
+      padding: 0 1.25rem;
+      height: 64px;
+      background: linear-gradient(135deg, #2A5C56, #3D968A);
       color: #fff;
+      box-shadow: 0 2px 15px rgba(0,0,0,0.1);
     }
     .nav-logo {
       display: flex;
@@ -46,6 +48,7 @@
       color: rgba(255,255,255,0.85);
       padding: 0.4rem 1rem;
       border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 8px;
       transition: all 0.2s;
     }
     .nav-links a:hover {
@@ -55,12 +58,12 @@
     }
     .btn-primary {
       background: #fff !important;
-      color: #2e7d32 !important;
+      color: #2A5C56 !important;
       border-color: #fff !important;
       font-weight: 600;
     }
     .btn-primary:hover {
-      background: #e8f5e9 !important;
+      background: #E8EDED !important;
     }
 
     /* Hero */
@@ -72,7 +75,7 @@
       justify-content: center;
       padding: 4rem 2rem;
       text-align: center;
-      background: linear-gradient(135deg, #f5f5f0 0%, #e8f5e9 50%, #f1f8e9 100%);
+      background: linear-gradient(135deg, #F8F9FA 0%, #E8EDED 50%, #F0F5F0 100%);
     }
     .hero-icon { margin-bottom: 1.5rem; }
     .hero-icon img {
@@ -80,19 +83,19 @@
       height: 80px;
       border-radius: 50%;
       object-fit: cover;
-      box-shadow: 0 4px 20px rgba(46,125,50,0.2);
+      box-shadow: 0 4px 20px rgba(42,92,86,0.2);
     }
     .hero h1 {
       font-size: clamp(1.8rem, 4vw, 2.8rem);
       font-weight: 800;
       line-height: 1.15;
       margin-bottom: 0.5rem;
-      color: #1a1a1a;
+      color: #2D3436;
     }
-    .hero h1 span { color: #2e7d32; }
+    .hero h1 span { color: #2A5C56; }
     .hero .subtitle {
       font-size: 1rem;
-      color: #555;
+      color: #636E72;
       max-width: 480px;
       margin: 0 auto 1.5rem;
     }
@@ -109,28 +112,22 @@
       padding: 0.75rem 1.75rem;
       font-size: 0.95rem;
       font-weight: 600;
-      border-radius: 6px;
+      border-radius: 12px;
       transition: all 0.2s;
     }
     .hero-actions a:hover { transform: translateY(-1px); }
     .btn-solid {
-      background: #2e7d32;
+      background: #2A5C56;
       color: #fff !important;
     }
-    .btn-solid:hover { background: #1b5e20 !important; }
-    .btn-outline {
-      background: transparent;
-      color: #2e7d32 !important;
-      border: 2px solid #2e7d32;
-    }
-    .btn-outline:hover { background: #e8f5e9 !important; }
+    .btn-solid:hover { background: #1F4540 !important; }
 
     /* Features */
     .features {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
       gap: 1rem;
-      max-width: 640px;
+      max-width: 620px;
       width: 100%;
       margin-top: 3rem;
       text-align: left;
@@ -138,86 +135,94 @@
     .feature-card {
       padding: 1.25rem;
       background: #fff;
-      border: 1px solid #e0e0e0;
-      border-radius: 8px;
-      box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+      border: 1px solid #E9ECEF;
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.05);
     }
     .feature-card .icon { font-size: 1.4rem; margin-bottom: 0.4rem; }
     .feature-card h3 { font-size: 0.9rem; margin-bottom: 0.25rem; }
     .feature-card p {
       font-size: 0.78rem;
-      color: #666;
+      color: #636E72;
       line-height: 1.5;
     }
 
     .footer {
       text-align: center;
       padding: 1.5rem 2rem;
-      border-top: 1px solid #e0e0e0;
+      border-top: 1px solid #E9ECEF;
       font-size: 0.75rem;
-      color: #888;
-      background: #fafafa;
+      color: #636E72;
+      background: #F8F9FA;
     }
 
     @media (max-width: 480px) {
-      .nav { padding: 0.75rem 1rem; flex-direction: column; gap: 0.75rem; }
+      .nav { padding: 0 1rem; flex-direction: column; height: auto; gap: 0.5rem; padding: 0.75rem 1rem; }
       .hero { padding: 2.5rem 1rem; }
       .features { grid-template-columns: 1fr; }
     }
   </style>
-</head>
-<body>
-  <nav class="nav">
-    <div class="nav-logo">
-      <img src="logo.jpg" alt="Logo" onerror="this.style.display='none'">
-      <span>Mensageiros da Esperança</span>
-    </div>
-    <div class="nav-links">
-      <a href="dashboard.html">Entrar</a>
-      <a href="dashboard.html" class="btn-primary">Acessar</a>
-    </div>
-  </nav>
+  </head>
+  <body>
+    <nav class="nav">
+      <div class="nav-logo">
+        <img src="logo.jpg" alt="Logo" onerror="this.style.display='none'">
+        <span>Mensageiros da Esperança</span>
+      </div>
+      <div class="nav-links">
+        <a href="login.html" class="btn-primary">Entrar</a>
+      </div>
+    </nav>
 
-  <main class="hero">
-    <div class="hero-icon">
-      <img src="logo.jpg" alt="Logo" onerror="this.src='https://via.placeholder.com/80/2E7D32/FFFFFF?text=ME'">
-    </div>
-    <h1>Gestão Social<br><span>que transforma</span></h1>
-    <p class="subtitle">
-      Sistema de gestão para ONGs — cadastro de cursos, inscrições, presença digital
-      e dashboard completo com Firebase.
-    </p>
-    <div class="hero-actions">
-      <a href="dashboard.html" class="btn-solid">Acessar o Sistema →</a>
-      <a href="login.html" class="btn-outline">Fazer Login</a>
-    </div>
+    <main class="hero">
+      <div class="hero-icon">
+        <img src="logo.jpg" alt="Logo" onerror="this.src='https://via.placeholder.com/80/2A5C56/FFFFFF?text=ME'">
+      </div>
+      <h1>Gestão Social<br><span>que transforma</span></h1>
+      <p class="subtitle">
+        Sistema de gestão para ONGs — cadastro de cursos, inscrições, presença digital
+        e dashboard completo com Firebase.
+      </p>
+      <div class="hero-actions">
+        <a href="login.html" class="btn-solid">Fazer Login →</a>
+      </div>
 
-    <div class="features">
-      <div class="feature-card">
-        <div class="icon">📋</div>
-        <h3>Cursos</h3>
-        <p>Cadastro e gerenciamento de cursos com informações completas.</p>
+      <div class="features">
+        <div class="feature-card">
+          <div class="icon">📋</div>
+          <h3>Cursos</h3>
+          <p>Cadastro e gerenciamento de cursos com informações completas.</p>
+        </div>
+        <div class="feature-card">
+          <div class="icon">✍️</div>
+          <h3>Inscrições</h3>
+          <p>Controle de inscrições e participantes por curso.</p>
+        </div>
+        <div class="feature-card">
+          <div class="icon">✅</div>
+          <h3>Presença</h3>
+          <p>Registro digital de presença com histórico.</p>
+        </div>
+        <div class="feature-card">
+          <div class="icon">📊</div>
+          <h3>Dashboard</h3>
+          <p>Visão geral com indicadores e últimas atividades.</p>
+        </div>
+        <div class="feature-card">
+          <div class="icon">🔐</div>
+          <h3>Autenticação</h3>
+          <p>Login seguro com Firebase Auth e controle de acesso por usuário.</p>
+        </div>
+        <div class="feature-card">
+          <div class="icon">📱</div>
+          <h3>Responsivo</h3>
+          <p>Acesso completo pelo celular com layout adaptado para qualquer tela.</p>
+        </div>
       </div>
-      <div class="feature-card">
-        <div class="icon">✍️</div>
-        <h3>Inscrições</h3>
-        <p>Controle de inscrições e participantes por curso.</p>
-      </div>
-      <div class="feature-card">
-        <div class="icon">✅</div>
-        <h3>Presença</h3>
-        <p>Registro digital de presença com histórico.</p>
-      </div>
-      <div class="feature-card">
-        <div class="icon">📊</div>
-        <h3>Dashboard</h3>
-        <p>Visão geral com indicadores e últimas atividades.</p>
-      </div>
-    </div>
-  </main>
+    </main>
 
-  <footer class="footer">
-    Mensageiros da Esperança — Projeto de Extensão II (ADS)
-  </footer>
+    <footer class="footer">
+      Mensageiros da Esperança — Projeto de Extensão II (ADS)
+    </footer>
 </body>
 </html>
