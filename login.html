@@ -75,6 +75,9 @@
           <label for="senha">Senha</label>
           <input type="password" id="senha" required placeholder="••••••••">
         </div>
+        <div style="text-align: right; margin-bottom: 0.75rem;">
+          <a href="#" id="forgotPassword" style="font-size: 0.85rem; color: var(--primary); text-decoration: none;">Esqueci minha senha</a>
+        </div>
         <button type="submit" class="btn btn-primary btn-block" id="btnLogin">
           <i data-lucide="log-in"></i> Entrar no Sistema
         </button>
@@ -118,6 +121,28 @@
         btnLogin.disabled = false;
         btnLogin.innerHTML = '<i data-lucide="log-in"></i> Entrar no Sistema';
         lucide.createIcons();
+      }
+    });
+
+    document.getElementById('forgotPassword').addEventListener('click', async (e) => {
+      e.preventDefault();
+      const email = document.getElementById('email').value.trim();
+      if (!email) {
+        errorMsg.textContent = 'Digite seu e-mail primeiro para recuperar a senha.';
+        errorMsg.style.display = 'block';
+        return;
+      }
+      try {
+        await auth.sendPasswordResetEmail(email);
+        errorMsg.style.background = '#E8F5E9';
+        errorMsg.style.color = '#2E7D32';
+        errorMsg.textContent = 'E-mail de recuperação enviado! Verifique sua caixa de entrada.';
+        errorMsg.style.display = 'block';
+      } catch (err) {
+        errorMsg.style.background = '#FFEBEE';
+        errorMsg.style.color = '#D32F2F';
+        errorMsg.textContent = 'Erro ao enviar e-mail. Verifique se o endereço está correto.';
+        errorMsg.style.display = 'block';
       }
     });
   </script>
