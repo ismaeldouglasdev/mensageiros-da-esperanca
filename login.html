@@ -110,7 +110,7 @@
 
       try {
         await authAPI.login(email, senha);
-        window.location.href = 'index.html';
+        window.location.href = 'dashboard.html';
       } catch (error) {
         console.error('Erro de login:', error);
         errorMsg.textContent = 'E-mail ou senha incorretos. Verifique e tente novamente.';

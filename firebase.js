@@ -35,13 +35,11 @@ const protegerRota = () => {
   auth.onAuthStateChanged((user) => {
     if (!user) {
       // Se não estiver na página de login e não estiver logado, redireciona
-      if (!window.location.pathname.includes('login.html')) {
+      if (!window.location.pathname.includes('login.html') && !window.location.pathname.includes('index.html') && !window.location.pathname.endsWith('/mensageiros-da-esperanca/') && !window.location.pathname.endsWith('/mensageiros-da-esperanca')) {
         window.location.href = 'login.html';
       }
-    } else {
-      // Se estiver logado e tentar acessar a tela de login, vai para o dashboard
-      if (window.location.pathname.includes('login.html')) {
-        window.location.href = 'index.html';
+      if (window.location.pathname.includes('login.html') || window.location.pathname.includes('index.html') || window.location.pathname.endsWith('/mensageiros-da-esperanca/') || window.location.pathname.endsWith('/mensageiros-da-esperanca')) {
+        window.location.href = 'dashboard.html';
       }
     }
   });

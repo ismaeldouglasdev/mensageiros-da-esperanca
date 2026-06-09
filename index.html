@@ -3,184 +3,221 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Mensageiros da Esperança - Dashboard</title>
-  <link rel="stylesheet" href="style.css?v=1.1">
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
-  <script src="https://unpkg.com/lucide@latest"></script>
-  <script src="firebase.js?v=1.1"></script>
-  <script>protegerRota();</script>
+  <title>Mensageiros da Esperança — Gestão Social</title>
+  <link rel="icon" href="logo.jpg">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #f5f5f0;
+      color: #1a1a1a;
+      line-height: 1.6;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    a { text-decoration: none; }
+
+    /* Nav */
+    .nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 2rem;
+      background: #2e7d32;
+      color: #fff;
+    }
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-size: 1.1rem;
+      font-weight: 700;
+    }
+    .nav-logo img {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+    .nav-links { display: flex; gap: 1rem; align-items: center; }
+    .nav-links a {
+      font-size: 0.85rem;
+      color: rgba(255,255,255,0.85);
+      padding: 0.4rem 1rem;
+      border: 1px solid rgba(255,255,255,0.2);
+      transition: all 0.2s;
+    }
+    .nav-links a:hover {
+      color: #fff;
+      border-color: #fff;
+      background: rgba(255,255,255,0.1);
+    }
+    .btn-primary {
+      background: #fff !important;
+      color: #2e7d32 !important;
+      border-color: #fff !important;
+      font-weight: 600;
+    }
+    .btn-primary:hover {
+      background: #e8f5e9 !important;
+    }
+
+    /* Hero */
+    .hero {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 4rem 2rem;
+      text-align: center;
+      background: linear-gradient(135deg, #f5f5f0 0%, #e8f5e9 50%, #f1f8e9 100%);
+    }
+    .hero-icon { margin-bottom: 1.5rem; }
+    .hero-icon img {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      object-fit: cover;
+      box-shadow: 0 4px 20px rgba(46,125,50,0.2);
+    }
+    .hero h1 {
+      font-size: clamp(1.8rem, 4vw, 2.8rem);
+      font-weight: 800;
+      line-height: 1.15;
+      margin-bottom: 0.5rem;
+      color: #1a1a1a;
+    }
+    .hero h1 span { color: #2e7d32; }
+    .hero .subtitle {
+      font-size: 1rem;
+      color: #555;
+      max-width: 480px;
+      margin: 0 auto 1.5rem;
+    }
+    .hero-actions {
+      display: flex;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .hero-actions a {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.75rem 1.75rem;
+      font-size: 0.95rem;
+      font-weight: 600;
+      border-radius: 6px;
+      transition: all 0.2s;
+    }
+    .hero-actions a:hover { transform: translateY(-1px); }
+    .btn-solid {
+      background: #2e7d32;
+      color: #fff !important;
+    }
+    .btn-solid:hover { background: #1b5e20 !important; }
+    .btn-outline {
+      background: transparent;
+      color: #2e7d32 !important;
+      border: 2px solid #2e7d32;
+    }
+    .btn-outline:hover { background: #e8f5e9 !important; }
+
+    /* Features */
+    .features {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 1rem;
+      max-width: 640px;
+      width: 100%;
+      margin-top: 3rem;
+      text-align: left;
+    }
+    .feature-card {
+      padding: 1.25rem;
+      background: #fff;
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+    }
+    .feature-card .icon { font-size: 1.4rem; margin-bottom: 0.4rem; }
+    .feature-card h3 { font-size: 0.9rem; margin-bottom: 0.25rem; }
+    .feature-card p {
+      font-size: 0.78rem;
+      color: #666;
+      line-height: 1.5;
+    }
+
+    .footer {
+      text-align: center;
+      padding: 1.5rem 2rem;
+      border-top: 1px solid #e0e0e0;
+      font-size: 0.75rem;
+      color: #888;
+      background: #fafafa;
+    }
+
+    @media (max-width: 480px) {
+      .nav { padding: 0.75rem 1rem; flex-direction: column; gap: 0.75rem; }
+      .hero { padding: 2.5rem 1rem; }
+      .features { grid-template-columns: 1fr; }
+    }
+  </style>
 </head>
 <body>
-  <header class="header">
-    <div class="header-logo">
-      <img src="logo.jpg" alt="Logo" onerror="this.src='https://via.placeholder.com/40/2E7D32/FFFFFF?text=ME'">
-      <h1>Mensageiros da Esperança</h1>
+  <nav class="nav">
+    <div class="nav-logo">
+      <img src="logo.jpg" alt="Logo" onerror="this.style.display='none'">
+      <span>Mensageiros da Esperança</span>
     </div>
-    <div style="display: flex; gap: 0.5rem; align-items: center;">
-      <nav class="header-nav" id="navMenu">
-        <a href="index.html" class="ativo">Dashboard</a>
-        <a href="cursos.html">Cursos</a>
-        <a href="inscricoes.html">Inscrições</a>
-        <a href="presenca.html">Presença</a>
-      </nav>
-      <button class="btn btn-sm" id="btnLogout" style="background: rgba(255,255,255,0.15); color: #fff;" title="Sair do Sistema">
-        <i data-lucide="log-out"></i>
-      </button>
-      <button class="menu-toggle" id="menuToggle" aria-label="Abrir menu">
-        <span>☰</span>
-      </button>
+    <div class="nav-links">
+      <a href="dashboard.html">Entrar</a>
+      <a href="dashboard.html" class="btn-primary">Acessar</a>
     </div>
-  </header>
+  </nav>
 
-  <main class="container">
-    <h2 class="page-title"><i data-lucide="layout-dashboard"></i> Dashboard</h2>
-
-    <div class="loading" id="loading">
-      <div class="spinner"></div>
-      <p>Carregando dados...</p>
+  <main class="hero">
+    <div class="hero-icon">
+      <img src="logo.jpg" alt="Logo" onerror="this.src='https://via.placeholder.com/80/2E7D32/FFFFFF?text=ME'">
+    </div>
+    <h1>Gestão Social<br><span>que transforma</span></h1>
+    <p class="subtitle">
+      Sistema de gestão para ONGs — cadastro de cursos, inscrições, presença digital
+      e dashboard completo com Firebase.
+    </p>
+    <div class="hero-actions">
+      <a href="dashboard.html" class="btn-solid">Acessar o Sistema →</a>
+      <a href="login.html" class="btn-outline">Fazer Login</a>
     </div>
 
-    <div id="content" style="display: none;">
-      <div class="cards-grid">
-        <div class="card">
-          <div class="card-icon" style="color: var(--primary)"><i data-lucide="book-open"></i></div>
-          <h3>Cursos Ativos</h3>
-          <p class="valor" id="total-cursos">0</p>
-        </div>
-        <div class="card">
-          <div class="card-icon" style="color: var(--accent)"><i data-lucide="users"></i></div>
-          <h3>Pessoas Atendidas</h3>
-          <p class="valor" id="total-participantes-unicos">0</p>
-          <small id="total-matriculas" style="color: var(--text-light); font-size: 0.75rem;"></small>
-        </div>
-        <div class="card">
-          <div class="card-icon" style="color: var(--secondary)"><i data-lucide="map-pin"></i></div>
-          <h3>Unidades</h3>
-          <p class="valor">3</p>
-        </div>
-        <div class="card">
-          <div class="card-icon" style="color: var(--success)"><i data-lucide="check-circle"></i></div>
-          <h3>Presenças</h3>
-          <p class="valor" id="total-presencas">0</p>
-        </div>
+    <div class="features">
+      <div class="feature-card">
+        <div class="icon">📋</div>
+        <h3>Cursos</h3>
+        <p>Cadastro e gerenciamento de cursos com informações completas.</p>
       </div>
-
-      <section class="table-section">
-        <h3><i data-lucide="clock"></i> Últimas Presenças</h3>
-        <div class="table-container">
-          <table id="presencas-table">
-            <thead>
-              <tr>
-                <th>Data</th>
-                <th>Participante</th>
-                <th>Curso</th>
-                <th>Unidade</th>
-              </tr>
-            </thead>
-            <tbody id="presencas-tbody"></tbody>
-          </table>
-          <div class="empty-state" id="empty-presencas" style="display: none;">
-            <i data-lucide="calendar-x" class="icon"></i>
-            <p>Nenhuma presença registrada ainda.</p>
-          </div>
-        </div>
-      </section>
+      <div class="feature-card">
+        <div class="icon">✍️</div>
+        <h3>Inscrições</h3>
+        <p>Controle de inscrições e participantes por curso.</p>
+      </div>
+      <div class="feature-card">
+        <div class="icon">✅</div>
+        <h3>Presença</h3>
+        <p>Registro digital de presença com histórico.</p>
+      </div>
+      <div class="feature-card">
+        <div class="icon">📊</div>
+        <h3>Dashboard</h3>
+        <p>Visão geral com indicadores e últimas atividades.</p>
+      </div>
     </div>
-
-    <div id="toast" class="toast" style="display: none;"></div>
   </main>
 
-  <script>
-    document.addEventListener('DOMContentLoaded', async () => {
-      lucide.createIcons();
-      
-      const loading = document.getElementById('loading');
-      const btnLogout = document.getElementById('btnLogout');
-      const menuToggle = document.getElementById('menuToggle');
-      const navMenu = document.getElementById('navMenu');
-
-      menuToggle?.addEventListener('click', () => {
-        navMenu.classList.toggle('aberto');
-      });
-      
-      btnLogout?.addEventListener('click', async () => {
-        if (confirm('Deseja realmente sair do sistema?')) {
-          await authAPI.logout();
-          window.location.href = 'login.html';
-        }
-      });
-
-      const content = document.getElementById('content');
-      const toast = document.getElementById('toast');
-      const totalCursosEl = document.getElementById('total-cursos');
-      const totalPresencasEl = document.getElementById('total-presencas');
-      const presencasTbody = document.getElementById('presencas-tbody');
-      const emptyPresencasEl = document.getElementById('empty-presencas');
-      const presencasTable = document.getElementById('presencas-table');
-
-      const showToast = (message, type = 'success') => {
-        toast.textContent = message;
-        toast.className = `toast toast-${type}`;
-        toast.style.display = 'block';
-        setTimeout(() => {
-          toast.style.display = 'none';
-        }, 3000);
-      };
-
-      try {
-        const [cursos, totalParticipantes, totalUnicos, totalPresencasCount, ultimasPresencas] = await Promise.all([
-          cursosAPI.listar(),
-          participantesAPI.contar(),
-          participantesAPI.contarUnicos(),
-          presencasAPI.contarTodas(),
-          presencasAPI.ultimasPresencasConfirmadas(10)
-        ]);
-
-        totalCursosEl.textContent = cursos.length;
-        document.getElementById('total-participantes-unicos').textContent = totalUnicos;
-        document.getElementById('total-matriculas').textContent = `${totalParticipantes} matrículas ativas`;
-        totalPresencasEl.textContent = totalPresencasCount;
-
-        if (ultimasPresencas.length === 0) {
-          emptyPresencasEl.style.display = 'block';
-          presencasTable.style.display = 'none';
-        } else {
-          presencasTbody.innerHTML = '';
-          for (const presenca of ultimasPresencas) {
-            const tr = document.createElement('tr');
-            const dataFormatada = formatarDataBR(presenca.data || presenca.createdAt);
-            
-            let cursoNome = presenca.cursoNome;
-            let unidade = presenca.unidade;
-            if (!cursoNome) {
-              const curso = cursos.find(c => c.id === presenca.cursoId);
-              if (!curso) continue; 
-              cursoNome = curso.nome;
-              unidade = curso.unidade;
-            }
-
-            tr.innerHTML = `
-              <td>${dataFormatada}</td>
-              <td>${presenca.participanteNome || 'N/A'}</td>
-              <td>${cursoNome}</td>
-              <td><span class="badge badge-primary">${unidade}</span></td>
-            `;
-            presencasTbody.appendChild(tr);
-          }
-        }
-
-        loading.style.display = 'none';
-        content.style.display = 'block';
-        lucide.createIcons();
-      } catch (error) {
-        console.error('Erro ao carregar dados:', error);
-        showToast('Erro ao carregar dados do dashboard.', 'error');
-        loading.style.display = 'none';
-        content.style.display = 'block';
-      }
-    });
-  </script>
+  <footer class="footer">
+    Mensageiros da Esperança — Projeto de Extensão II (ADS)
+  </footer>
 </body>
 </html>
