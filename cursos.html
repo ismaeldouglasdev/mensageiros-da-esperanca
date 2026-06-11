@@ -3,12 +3,33 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Cursos - Mensageiros da Esperança</title>
+  <title data-i18n="app.title">Cursos - Mensageiros da Esperança</title>
   <link rel="stylesheet" href="style.css?v=1.1">
+  <style>
+    .lang-switcher {
+      background: rgba(255,255,255,0.15);
+      color: #fff;
+      border: 1px solid rgba(255,255,255,0.3);
+      border-radius: 6px;
+      padding: 0.25rem 0.5rem;
+      font-size: 0.7rem;
+      cursor: pointer;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      transition: all 0.2s;
+      line-height: 1.4;
+    }
+    .lang-switcher:hover {
+      background: rgba(255,255,255,0.3);
+      border-color: #fff;
+    }
+  </style>
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
   <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="i18n.js"></script>
+  <script src="firebase.config.js?v=1.1"></script>
   <script src="firebase.js?v=1.1"></script>
   <script>protegerRota();</script>
 </head>
@@ -17,95 +38,96 @@
   <header class="header">
     <div class="header-logo">
       <img src="logo.jpg" alt="Logo" onerror="this.src='https://via.placeholder.com/40/2E7D32/FFFFFF?text=ME'">
-      <h1>Mensageiros da Esperança</h1>
+      <h1 data-i18n="app.name">Mensageiros da Esperança</h1>
     </div>
     <div style="display: flex; gap: 0.5rem; align-items: center;">
       <nav class="header-nav" id="navMenu">
-        <a href="dashboard.html">Dashboard</a>
-        <a href="cursos.html" class="ativo">Cursos</a>
-        <a href="inscricoes.html">Inscrições</a>
-        <a href="presenca.html">Presença</a>
+        <a href="dashboard.html"><span data-i18n="nav.dashboard">Dashboard</span></a>
+        <a href="cursos.html" class="ativo"><span data-i18n="nav.cursos">Cursos</span></a>
+        <a href="inscricoes.html"><span data-i18n="nav.inscricoes">Inscrições</span></a>
+        <a href="presenca.html"><span data-i18n="nav.presenca">Presença</span></a>
       </nav>
-      <button class="btn btn-sm" id="btnLogout" style="background: rgba(255,255,255,0.15); color: #fff;" title="Sair do Sistema">
+      <button class="lang-switcher" onclick="toggleLang()" title="Switch language" data-i18n-lang="lang.switch">PT</button>
+      <button class="btn btn-sm" id="btnLogout" style="background: rgba(255,255,255,0.15); color: #fff;" data-i18n-title="nav.sair">
         <i data-lucide="log-out"></i>
       </button>
-      <button class="menu-toggle" id="menuToggle" aria-label="Abrir menu">
+      <button class="menu-toggle" id="menuToggle" data-i18n-aria-label="nav.menu_abrir">
         <span>☰</span>
       </button>
     </div>
   </header>
 
   <main class="container">
-    <h2 class="page-title"><i data-lucide="book-marked"></i> Gestão de Cursos</h2>
+    <h2 class="page-title"><i data-lucide="book-marked"></i> <span data-i18n="cursos.title">Gestão de Cursos</span></h2>
 
     <div class="form-card">
-      <h2 id="formTitle">Novo Curso</h2>
+      <h2 id="formTitle"><span data-i18n="cursos.form.title_new">Novo Curso</span></h2>
       <form id="formCurso">
         <input type="hidden" id="cursoId">
         <div class="form-group">
-          <label for="nome">Nome do Curso</label>
-          <input type="text" id="nome" required placeholder="Ex: Informática Básica">
+          <label for="nome" data-i18n="cursos.form.nome_label">Nome do Curso</label>
+          <input type="text" id="nome" required data-i18n-placeholder="cursos.form.nome_placeholder" placeholder="Ex: Informática Básica">
         </div>
         <div class="form-row">
           <div class="form-group">
-            <label for="data">Data de Início/Evento</label>
+            <label for="data" data-i18n="cursos.form.data_label">Data de Início/Evento</label>
             <input type="date" id="data" required>
           </div>
           <div class="form-group">
-            <label for="horario">Horário</label>
+            <label for="horario" data-i18n="cursos.form.horario_label">Horário</label>
             <input type="time" id="horario" required>
           </div>
         </div>
         <div class="form-row">
           <div class="form-group">
-            <label for="vagas">Vagas Disponíveis</label>
-            <input type="number" id="vagas" min="1" required placeholder="Ex: 20">
+            <label for="vagas" data-i18n="cursos.form.vagas_label">Vagas Disponíveis</label>
+            <input type="number" id="vagas" min="1" required data-i18n-placeholder="cursos.form.vagas_placeholder" placeholder="Ex: 20">
           </div>
           <div class="form-group">
-            <label for="responsavel">Responsável/Instrutor</label>
-            <input type="text" id="responsavel" required placeholder="Nome do instrutor">
+            <label for="responsavel" data-i18n="cursos.form.responsavel_label">Responsável/Instrutor</label>
+            <input type="text" id="responsavel" required data-i18n-placeholder="cursos.form.responsavel_placeholder" placeholder="Nome do instrutor">
           </div>
         </div>
         <div class="form-group">
-          <label for="unidade">Unidade</label>
+          <label for="unidade" data-i18n="cursos.form.unidade_label">Unidade</label>
           <select id="unidade" required>
-            <option value="">Selecione a unidade...</option>
-            <option value="Unidade 1">Unidade 1 - Central</option>
-            <option value="Unidade 2">Unidade 2 - Praça</option>
-            <option value="Unidade 3">Unidade 3 - Casa de Cultura</option>
+            <option value="" data-i18n="cursos.form.unidade_placeholder">Selecione a unidade...</option>
+            <option value="Unidade 1" data-i18n="cursos.form.unidade1">Unidade 1 - Central</option>
+            <option value="Unidade 2" data-i18n="cursos.form.unidade2">Unidade 2 - Praça</option>
+            <option value="Unidade 3" data-i18n="cursos.form.unidade3">Unidade 3 - Casa de Cultura</option>
           </select>
         </div>
         <div class="form-row">
           <button type="submit" class="btn btn-primary btn-block" id="btnSubmit">
-            <i data-lucide="plus-circle"></i> Cadastrar Curso
+            <i data-lucide="plus-circle"></i> <span data-i18n="cursos.form.btn_cadastrar">Cadastrar Curso</span>
           </button>
           <button type="button" class="btn btn-secondary btn-block" id="btnCancelar" style="display: none;">
-            Cancelar Edição
+            <span data-i18n="cursos.form.btn_cancelar">Cancelar Edição</span>
           </button>
         </div>
       </form>
     </div>
 
-    <h2 class="page-title"><i data-lucide="list"></i> Cursos Cadastrados</h2>
+    <h2 class="page-title"><i data-lucide="list"></i> <span data-i18n="cursos.lista_title">Cursos Cadastrados</span></h2>
 
     <div class="table-container">
       <table id="tabelaCursos">
         <thead>
           <tr>
-            <th>Nome</th>
-            <th>Data</th>
-            <th>Horário</th>
-            <th>Vagas</th>
-            <th>Responsável</th>
-            <th>Unidade</th>
-            <th>Ações</th>
+            <th data-i18n="cursos.table.nome">Nome</th>
+            <th data-i18n="cursos.table.data">Data</th>
+            <th data-i18n="cursos.table.horario">Horário</th>
+            <th data-i18n="cursos.table.vagas">Vagas</th>
+            <th data-i18n="cursos.table.responsavel">Responsável</th>
+            <th data-i18n="cursos.table.unidade">Unidade</th>
+            <th data-i18n="cursos.table.acoes">Ações</th>
           </tr>
         </thead>
         <tbody id="listaCursos">
           <tr>
             <td colspan="7" class="loading">
               <div class="spinner"></div>
-              <p>Carregando cursos...</p>
+              <p data-i18n="cursos.loading">Carregando cursos...</p>
             </td>
           </tr>
         </tbody>
@@ -126,8 +148,17 @@
     const cursoIdInput = document.getElementById('cursoId');
     const btnLogout = document.getElementById('btnLogout');
 
+    // Translate placeholders
+    document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+      el.placeholder = t(el.getAttribute('data-i18n-placeholder'));
+    });
+    // Translate select options with data-i18n
+    document.querySelectorAll('option[data-i18n]').forEach(el => {
+      el.textContent = t(el.getAttribute('data-i18n'));
+    });
+
     btnLogout?.addEventListener('click', async () => {
-      if (confirm('Deseja realmente sair do sistema?')) {
+      if (confirm(t('dashboard.confirm_sair'))) {
         await authAPI.logout();
         window.location.href = 'login.html';
       }
@@ -152,7 +183,7 @@
         <tr>
           <td colspan="7" class="loading">
             <div class="spinner"></div>
-            <p>Carregando...</p>
+            <p>${t('cursos.loading')}</p>
           </td>
         </tr>
       `;
@@ -163,7 +194,7 @@
             <tr>
               <td colspan="7" class="empty-state">
                 <i data-lucide="folder-open" class="icon"></i>
-                <p>Nenhum curso cadastrado ainda.</p>
+                <p>${t('cursos.empty')}</p>
               </td>
             </tr>
           `;
@@ -180,10 +211,10 @@
             <td><span class="badge badge-primary">${c.unidade || '-'}</span></td>
             <td>
               <div style="display: flex; gap: 0.5rem;">
-                <button class="btn btn-secondary btn-sm" onclick="prepararEdicao('${c.id}')" title="Editar">
+                <button class="btn btn-secondary btn-sm" onclick="prepararEdicao('${c.id}')" title="${t('common.editar')}">
                   <i data-lucide="edit-3"></i>
                 </button>
-                <button class="btn btn-danger btn-sm" onclick="excluirCurso('${c.id}', '${c.nome}')" title="Excluir">
+                <button class="btn btn-danger btn-sm" onclick="excluirCurso('${c.id}', '${c.nome}')" title="${t('common.excluir')}">
                   <i data-lucide="trash-2"></i>
                 </button>
               </div>
@@ -196,11 +227,11 @@
         listaCursos.innerHTML = `
           <tr>
             <td colspan="7" class="loading" style="color: var(--danger)">
-              Erro ao carregar cursos
+              ${t('cursos.erro_carregar')}
             </td>
           </tr>
         `;
-        mostrarToast('Erro ao carregar cursos', 'error');
+        mostrarToast(t('cursos.erro_carregar'), 'error');
       }
     }
 
@@ -218,13 +249,14 @@
         document.getElementById('unidade').value = curso.unidade;
 
         editando = true;
-        formTitle.textContent = 'Editar Curso';
-        btnSubmit.innerHTML = '<i data-lucide="save"></i> Salvar Alterações';
+        formTitle.innerHTML = '<span data-i18n="cursos.form.title_edit">' + t('cursos.form.title_edit') + '</span>';
+        applyTranslations();
+        btnSubmit.innerHTML = '<i data-lucide="save"></i> ' + t('cursos.form.btn_salvar');
         btnCancelar.style.display = 'block';
         window.scrollTo({ top: 0, behavior: 'smooth' });
         lucide.createIcons();
       } catch (err) {
-        mostrarToast('Erro ao carregar dados do curso', 'error');
+        mostrarToast(t('cursos.erro_obter'), 'error');
       }
     }
 
@@ -232,8 +264,9 @@
       formCurso.reset();
       cursoIdInput.value = '';
       editando = false;
-      formTitle.textContent = 'Novo Curso';
-      btnSubmit.innerHTML = '<i data-lucide="plus-circle"></i> Cadastrar Curso';
+      formTitle.innerHTML = '<span data-i18n="cursos.form.title_new">' + t('cursos.form.title_new') + '</span>';
+      applyTranslations();
+      btnSubmit.innerHTML = '<i data-lucide="plus-circle"></i> ' + t('cursos.form.btn_cadastrar');
       btnCancelar.style.display = 'none';
       lucide.createIcons();
     });
@@ -243,21 +276,21 @@
         // Proteção de exclusão: verificar se há participantes
         const participantes = await participantesAPI.listar(id);
         if (participantes.length > 0) {
-          mostrarToast(`Não é possível excluir o curso "${nome}" porque ele possui ${participantes.length} participante(s) inscrito(s).`, 'error');
+          mostrarToast(t('cursos.erro_excluir_com_participantes').replace('{nome}', nome).replace('{count}', participantes.length), 'error');
           return;
         }
 
-        if (!confirm(`Tem certeza que deseja excluir o curso "${nome}"? Isso também apagará o histórico de presenças dele.`)) return;
+        if (!confirm(t('cursos.confirm_excluir').replace('{nome}', nome))) return;
         
         // Limpar presenças órfãs antes de deletar o curso
         await presencasUtilsAPI.removerPorCurso(id);
         
         await cursosAPI.remover(id);
-        mostrarToast('Curso excluído com sucesso', 'success');
+        mostrarToast(t('cursos.sucesso_excluir'), 'success');
         carregarCursos();
       } catch (err) {
         console.error('Erro ao excluir curso:', err);
-        mostrarToast('Erro ao excluir curso', 'error');
+        mostrarToast(t('cursos.erro_salvar'), 'error');
       }
     }
 
@@ -277,16 +310,16 @@
       try {
         if (editando) {
           await cursosAPI.atualizar(cursoIdInput.value, curso);
-          mostrarToast('Curso atualizado com sucesso!', 'success');
+          mostrarToast(t('cursos.sucesso_atualizar'), 'success');
           btnCancelar.click();
         } else {
           await cursosAPI.adicionar(curso);
-          mostrarToast('Curso cadastrado com sucesso!', 'success');
+          mostrarToast(t('cursos.sucesso_salvar'), 'success');
           formCurso.reset();
         }
         carregarCursos();
       } catch (err) {
-        mostrarToast('Erro ao salvar curso', 'error');
+        mostrarToast(t('cursos.erro_salvar'), 'error');
       } finally {
         btnSubmit.disabled = false;
       }

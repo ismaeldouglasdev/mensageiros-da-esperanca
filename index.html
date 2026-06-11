@@ -3,8 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Mensageiros da Esperança — Gestão Social</title>
+  <title data-i18n="app.title">Mensageiros da Esperança — Gestão Social</title>
   <link rel="icon" href="logo.jpg">
+  <script src="i18n.js"></script>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
@@ -45,7 +46,7 @@
       padding: 3px;
       background: rgba(255,255,255,0.1);
     }
-    .nav-links { display: flex; gap: 1rem; align-items: center; }
+    .nav-links { display: flex; gap: 0.5rem; align-items: center; }
     .nav-links a {
       font-size: 0.85rem;
       color: rgba(255,255,255,0.85);
@@ -67,6 +68,25 @@
     }
     .btn-primary:hover {
       background: #E8EDED !important;
+    }
+
+    /* Lang switcher */
+    .lang-switcher {
+      background: rgba(255,255,255,0.15);
+      color: #fff;
+      border: 1px solid rgba(255,255,255,0.3);
+      border-radius: 6px;
+      padding: 0.3rem 0.55rem;
+      font-size: 0.75rem;
+      cursor: pointer;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      transition: all 0.2s;
+      line-height: 1;
+    }
+    .lang-switcher:hover {
+      background: rgba(255,255,255,0.3);
+      border-color: #fff;
     }
 
     /* Hero */
@@ -173,10 +193,11 @@
     <nav class="nav">
       <div class="nav-logo">
         <img src="logo.jpg" alt="Logo" onerror="this.style.display='none'">
-        <span>Mensageiros da Esperança</span>
+        <span data-i18n="app.name">Mensageiros da Esperança</span>
       </div>
       <div class="nav-links">
-        <a href="login.html" class="btn-primary">Entrar</a>
+        <button class="lang-switcher" onclick="toggleLang()" title="Switch language" data-i18n-lang="lang.switch">PT</button>
+        <a href="login.html" class="btn-primary"><span data-i18n="nav.entrar">Entrar</span></a>
       </div>
     </nav>
 
@@ -184,50 +205,50 @@
       <div class="hero-icon">
         <img src="logo.jpg" alt="Logo" onerror="this.src='https://via.placeholder.com/80/2A5C56/FFFFFF?text=ME'">
       </div>
-      <h1>Gestão Social<br><span>que transforma</span></h1>
-      <p class="subtitle">
+      <h1><span data-i18n="hero.title">Gestão Social</span><br><span data-i18n="hero.title_span">que transforma</span></h1>
+      <p class="subtitle" data-i18n="hero.subtitle">
         Sistema de gestão para ONGs — cadastro de cursos, inscrições, presença digital
         e dashboard completo com Firebase.
       </p>
       <div class="hero-actions">
-        <a href="login.html" class="btn-solid">Fazer Login →</a>
+        <a href="login.html" class="btn-solid"><span data-i18n="hero.cta_login">Fazer Login →</span></a>
       </div>
 
       <div class="features">
         <div class="feature-card">
           <div class="icon">📋</div>
-          <h3>Cursos</h3>
-          <p>Cadastro e gerenciamento de cursos com informações completas.</p>
+          <h3 data-i18n="features.cursos.title">Cursos</h3>
+          <p data-i18n="features.cursos.desc">Cadastro e gerenciamento de cursos com informações completas.</p>
         </div>
         <div class="feature-card">
           <div class="icon">✍️</div>
-          <h3>Inscrições</h3>
-          <p>Controle de inscrições e participantes por curso.</p>
+          <h3 data-i18n="features.inscricoes.title">Inscrições</h3>
+          <p data-i18n="features.inscricoes.desc">Controle de inscrições e participantes por curso.</p>
         </div>
         <div class="feature-card">
           <div class="icon">✅</div>
-          <h3>Presença</h3>
-          <p>Registro digital de presença com histórico.</p>
+          <h3 data-i18n="features.presenca.title">Presença</h3>
+          <p data-i18n="features.presenca.desc">Registro digital de presença com histórico.</p>
         </div>
         <div class="feature-card">
           <div class="icon">📊</div>
-          <h3>Dashboard</h3>
-          <p>Visão geral com indicadores e últimas atividades.</p>
+          <h3 data-i18n="features.dashboard.title">Dashboard</h3>
+          <p data-i18n="features.dashboard.desc">Visão geral com indicadores e últimas atividades.</p>
         </div>
         <div class="feature-card">
           <div class="icon">🔐</div>
-          <h3>Autenticação</h3>
-          <p>Login seguro com Firebase Auth e controle de acesso por usuário.</p>
+          <h3 data-i18n="features.auth.title">Autenticação</h3>
+          <p data-i18n="features.auth.desc">Login seguro com Firebase Auth e controle de acesso por usuário.</p>
         </div>
         <div class="feature-card">
           <div class="icon">📱</div>
-          <h3>Responsivo</h3>
-          <p>Acesso completo pelo celular com layout adaptado para qualquer tela.</p>
+          <h3 data-i18n="features.responsivo.title">Responsivo</h3>
+          <p data-i18n="features.responsivo.desc">Acesso completo pelo celular com layout adaptado para qualquer tela.</p>
         </div>
       </div>
     </main>
 
-    <footer class="footer">
+    <footer class="footer" data-i18n="footer.text">
       Mensageiros da Esperança — Projeto de Extensão II (ADS)
     </footer>
 </body>

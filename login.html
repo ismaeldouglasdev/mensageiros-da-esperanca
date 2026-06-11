@@ -3,9 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Login - Mensageiros da Esperança</title>
+  <title data-i18n="app.title">Login - Mensageiros da Esperança</title>
   <link rel="stylesheet" href="style.css?v=1.1">
   <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="i18n.js"></script>
   <style>
     body {
       display: flex;
@@ -17,6 +18,7 @@
       width: 100%;
       max-width: 400px;
       padding: 1.5rem;
+      position: relative;
     }
     .login-card {
       background: #fff;
@@ -54,32 +56,54 @@
       font-size: 0.85rem;
       display: none;
     }
+    /* Lang switcher */
+    .lang-switcher {
+      position: absolute;
+      top: 1rem;
+      right: 2.5rem;
+      background: rgba(255,255,255,0.2);
+      color: #fff;
+      border: 1px solid rgba(255,255,255,0.3);
+      border-radius: 6px;
+      padding: 0.3rem 0.55rem;
+      font-size: 0.75rem;
+      cursor: pointer;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      transition: all 0.2s;
+      line-height: 1;
+    }
+    .lang-switcher:hover {
+      background: rgba(255,255,255,0.35);
+      border-color: #fff;
+    }
   </style>
 </head>
 <body>
 
   <div class="login-container">
+    <button class="lang-switcher" onclick="toggleLang()" title="Switch language" data-i18n-lang="lang.switch">PT</button>
     <div class="login-card">
       <img src="logo.jpg" alt="Logo" class="login-logo" onerror="this.src='https://via.placeholder.com/150x80/2E7D32/FFFFFF?text=Mensageiros'">
-      <h1>Login</h1>
-      <p>Sistema de Gestão</p>
+      <h1 data-i18n="login.title">Login</h1>
+      <p data-i18n="login.subtitle">Sistema de Gestão</p>
 
       <div id="errorMsg" class="error-msg"></div>
 
       <form id="loginForm">
         <div class="form-group" style="text-align: left;">
-          <label for="email">E-mail</label>
-          <input type="email" id="email" required placeholder="seu@email.com">
+          <label for="email" data-i18n="login.email_label">E-mail</label>
+          <input type="email" id="email" required data-i18n-placeholder="login.email_placeholder" placeholder="seu@email.com">
         </div>
         <div class="form-group" style="text-align: left;">
-          <label for="senha">Senha</label>
-          <input type="password" id="senha" required placeholder="••••••••">
+          <label for="senha" data-i18n="login.senha_label">Senha</label>
+          <input type="password" id="senha" required data-i18n-placeholder="login.senha_placeholder" placeholder="••••••••">
         </div>
         <div style="text-align: right; margin-bottom: 0.75rem;">
-          <a href="#" id="forgotPassword" style="font-size: 0.85rem; color: var(--primary); text-decoration: none;">Esqueci minha senha</a>
+          <a href="#" id="forgotPassword" style="font-size: 0.85rem; color: var(--primary); text-decoration: none;" data-i18n="login.esqueci_senha">Esqueci minha senha</a>
         </div>
         <button type="submit" class="btn btn-primary btn-block" id="btnLogin">
-          <i data-lucide="log-in"></i> Entrar no Sistema
+          <i data-lucide="log-in"></i> <span data-i18n="login.btn_entrar">Entrar no Sistema</span>
         </button>
       </form>
     </div>
@@ -88,7 +112,8 @@
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
-  <script src="firebase.js"></script>
+  <script src="firebase.config.js?v=1.1"></script>
+  <script src="firebase.js?v=1.1"></script>
 
   <script>
     lucide.createIcons();
@@ -96,6 +121,11 @@
     const loginForm = document.getElementById('loginForm');
     const errorMsg = document.getElementById('errorMsg');
     const btnLogin = document.getElementById('btnLogin');
+
+    // Translate placeholders
+    document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+      el.placeholder = t(el.getAttribute('data-i18n-placeholder'));
+    });
 
     // Se já estiver logado, vai direto para o dashboard
     protegerRota();
@@ -108,18 +138,18 @@
 
       errorMsg.style.display = 'none';
       btnLogin.disabled = true;
-      btnLogin.innerHTML = '<i data-lucide="loader" class="spinner"></i> Verificando...';
+      btnLogin.innerHTML = '<i data-lucide="loader" class="spinner"></i> ' + t('login.verificando');
       lucide.createIcons();
 
       try {
         await authAPI.login(email, senha);
         window.location.href = 'dashboard.html';
       } catch (error) {
-        console.error('Erro de login:', error);
-        errorMsg.textContent = 'E-mail ou senha incorretos. Verifique e tente novamente.';
+        console.error(t('auth.login_error') + ':', error);
+        errorMsg.textContent = t('login.error_credenciais');
         errorMsg.style.display = 'block';
         btnLogin.disabled = false;
-        btnLogin.innerHTML = '<i data-lucide="log-in"></i> Entrar no Sistema';
+        btnLogin.innerHTML = '<i data-lucide="log-in"></i> ' + t('login.btn_entrar');
         lucide.createIcons();
       }
     });
@@ -128,7 +158,7 @@
       e.preventDefault();
       const email = document.getElementById('email').value.trim();
       if (!email) {
-        errorMsg.textContent = 'Digite seu e-mail primeiro para recuperar a senha.';
+        errorMsg.textContent = t('login.error_email_required');
         errorMsg.style.display = 'block';
         return;
       }
@@ -136,12 +166,12 @@
         await auth.sendPasswordResetEmail(email);
         errorMsg.style.background = '#E8F5E9';
         errorMsg.style.color = '#2E7D32';
-        errorMsg.textContent = 'E-mail de recuperação enviado! Verifique sua caixa de entrada.';
+        errorMsg.textContent = t('login.success_recuperacao');
         errorMsg.style.display = 'block';
       } catch (err) {
         errorMsg.style.background = '#FFEBEE';
         errorMsg.style.color = '#D32F2F';
-        errorMsg.textContent = 'Erro ao enviar e-mail. Verifique se o endereço está correto.';
+        errorMsg.textContent = t('login.error_recuperacao');
         errorMsg.style.display = 'block';
       }
     });

@@ -3,12 +3,33 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Presença - Mensageiros da Esperança</title>
+  <title data-i18n="app.title">Presença - Mensageiros da Esperança</title>
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
   <link rel="stylesheet" href="style.css?v=1.1">
+  <style>
+    .lang-switcher {
+      background: rgba(255,255,255,0.15);
+      color: #fff;
+      border: 1px solid rgba(255,255,255,0.3);
+      border-radius: 6px;
+      padding: 0.25rem 0.5rem;
+      font-size: 0.7rem;
+      cursor: pointer;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      transition: all 0.2s;
+      line-height: 1.4;
+    }
+    .lang-switcher:hover {
+      background: rgba(255,255,255,0.3);
+      border-color: #fff;
+    }
+  </style>
   <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="i18n.js"></script>
+  <script src="firebase.config.js?v=1.1"></script>
   <script src="firebase.js?v=1.1"></script>
   <script>protegerRota();</script>
 </head>
@@ -17,42 +38,43 @@
   <header class="header">
     <div class="header-logo">
       <img src="logo.jpg" alt="Logo" onerror="this.src='https://via.placeholder.com/40/2E7D32/FFFFFF?text=ME'">
-      <h1>Mensageiros da Esperança</h1>
+      <h1 data-i18n="app.name">Mensageiros da Esperança</h1>
     </div>
     <div style="display: flex; gap: 0.5rem; align-items: center;">
       <nav class="header-nav" id="navMenu">
-        <a href="dashboard.html">Dashboard</a>
-        <a href="cursos.html">Cursos</a>
-        <a href="inscricoes.html">Inscrições</a>
-        <a href="presenca.html" class="ativo">Presença</a>
+        <a href="dashboard.html"><span data-i18n="nav.dashboard">Dashboard</span></a>
+        <a href="cursos.html"><span data-i18n="nav.cursos">Cursos</span></a>
+        <a href="inscricoes.html"><span data-i18n="nav.inscricoes">Inscrições</span></a>
+        <a href="presenca.html" class="ativo"><span data-i18n="nav.presenca">Presença</span></a>
       </nav>
-      <button class="btn btn-sm" id="btnLogout" style="background: rgba(255,255,255,0.15); color: #fff;" title="Sair do Sistema">
+      <button class="lang-switcher" onclick="toggleLang()" title="Switch language" data-i18n-lang="lang.switch">PT</button>
+      <button class="btn btn-sm" id="btnLogout" style="background: rgba(255,255,255,0.15); color: #fff;" data-i18n-title="nav.sair">
         <i data-lucide="log-out"></i>
       </button>
-      <button class="menu-toggle" id="menuToggle" aria-label="Abrir menu">
+      <button class="menu-toggle" id="menuToggle" data-i18n-aria-label="nav.menu_abrir">
         <span>☰</span>
       </button>
     </div>
   </header>
 
   <main class="container">
-    <h2 class="page-title"><i data-lucide="check-square"></i> Lista de Presença</h2>
+    <h2 class="page-title"><i data-lucide="check-square"></i> <span data-i18n="presenca.title">Lista de Presença</span></h2>
 
     <div class="form-card">
-      <h2>Selecionar Curso e Data</h2>
+      <h2 data-i18n="presenca.form.title">Selecionar Curso e Data</h2>
       <div class="form-row">
         <div class="form-group">
-          <label for="cursoSelect">Curso</label>
+          <label for="cursoSelect" data-i18n="presenca.form.curso_label">Curso</label>
           <select id="cursoSelect">
-            <option value="">Selecione um curso...</option>
+            <option value="" data-i18n="presenca.form.curso_placeholder">Selecione um curso...</option>
           </select>
         </div>
         <div class="form-group">
-          <label for="dataInput">Data da Aula</label>
+          <label for="dataInput" data-i18n="presenca.form.data_label">Data da Aula</label>
           <input type="date" id="dataInput">
         </div>
       </div>
-      <button class="btn btn-primary btn-block" id="carregarBtn"><i data-lucide="refresh-cw"></i> Carregar Lista</button>
+      <button class="btn btn-primary btn-block" id="carregarBtn"><i data-lucide="refresh-cw"></i> <span data-i18n="presenca.form.btn_carregar">Carregar Lista</span></button>
     </div>
 
     <div id="listaContainer" style="display: none;">
@@ -60,9 +82,9 @@
         <table>
           <thead>
             <tr>
-              <th>Participante</th>
+              <th data-i18n="presenca.table.participante">Participante</th>
               <th style="display: flex; align-items: center; gap: 0.5rem;">
-                Presença
+                <span data-i18n="presenca.table.presenca">Presença</span>
                 <input type="checkbox" id="selecionarTodos" title="Selecionar todos" style="width: 18px; height: 18px; cursor: pointer;">
               </th>
             </tr>
@@ -73,27 +95,35 @@
 
       <div style="margin-top: 1.5rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
         <div id="contadorPresenca" style="font-weight: 600; color: var(--primary-dark); font-size: 1.1rem;"></div>
-        <button class="btn btn-primary" id="salvarBtn"><i data-lucide="save"></i> Salvar Presenças</button>
+        <button class="btn btn-primary" id="salvarBtn"><i data-lucide="save"></i> <span data-i18n="presenca.btn_salvar">Salvar Presenças</span></button>
       </div>
     </div>
 
     <div id="emptyState" class="empty-state">
       <i data-lucide="list-checks" class="icon"></i>
-      <p>Selecione um curso e uma data para carregar a lista de chamadas.</p>
+      <p data-i18n="presenca.empty_selecionar">Selecione um curso e uma data para carregar a lista de chamadas.</p>
     </div>
 
     <div id="loading" class="loading" style="display: none;">
       <div class="spinner"></div>
-      <p>Carregando participantes...</p>
+      <p data-i18n="presenca.loading">Carregando participantes...</p>
     </div>
 
     <div id="toast" class="toast" style="display: none;"></div>
   </main>
 
   <script>
+    // Translate select options and placeholders
+    document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+      el.placeholder = t(el.getAttribute('data-i18n-placeholder'));
+    });
+    document.querySelectorAll('option[data-i18n]').forEach(el => {
+      el.textContent = t(el.getAttribute('data-i18n'));
+    });
+
     const btnLogout = document.getElementById('btnLogout');
     btnLogout?.addEventListener('click', async () => {
-      if (confirm('Deseja realmente sair do sistema?')) {
+      if (confirm(t('dashboard.confirm_sair'))) {
         await authAPI.logout();
         window.location.href = 'login.html';
       }
@@ -121,7 +151,7 @@
       try {
         const cursos = await cursosAPI.listar();
         const select = document.getElementById('cursoSelect');
-        select.innerHTML = '<option value="">Selecione um curso...</option>';
+        select.innerHTML = '<option value="">' + t('presenca.form.curso_placeholder') + '</option>';
         cursos.forEach(c => {
           const opt = document.createElement('option');
           opt.value = c.id;
@@ -130,7 +160,7 @@
           select.appendChild(opt);
         });
       } catch (e) {
-        mostrarToast('Erro ao carregar cursos', 'error');
+        mostrarToast(t('presenca.erro_carregar'), 'error');
       }
     }
 
@@ -138,7 +168,7 @@
       const checks = document.querySelectorAll('.presenca-checkbox');
       const total = checks.length;
       const presentes = document.querySelectorAll('.presenca-checkbox:checked').length;
-      document.getElementById('contadorPresenca').innerHTML = `<i data-lucide="users" style="width:18px;vertical-align:middle"></i> ${presentes} presentes de ${total} inscritos`;
+      document.getElementById('contadorPresenca').innerHTML = '<i data-lucide="users" style="width:18px;vertical-align:middle"></i> ' + t('presenca.contador').replace('{presentes}', presentes).replace('{total}', total);
       lucide.createIcons();
     }
 
@@ -149,7 +179,7 @@
       if (selectAllCb) selectAllCb.checked = false;
 
       if (listaParticipantes.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="2" style="text-align:center; padding:3rem; color:var(--text-light);">Nenhum participante inscrito neste curso</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="2" style="text-align:center; padding:3rem; color:var(--text-light);">' + t('presenca.empty_curso') + '</td></tr>';
         document.getElementById('contadorPresenca').textContent = '';
         return;
       }
@@ -193,7 +223,7 @@
       const data = document.getElementById('dataInput').value;
 
       if (!cursoId || !data) {
-        mostrarToast('Selecione o curso e a data', 'error');
+        mostrarToast(t('presenca.erro_selecao'), 'error');
         return;
       }
 
@@ -210,7 +240,7 @@
         renderizarLista();
         document.getElementById('listaContainer').style.display = 'block';
       } catch (e) {
-        mostrarToast('Erro ao carregar lista', 'error');
+        mostrarToast(t('presenca.erro_carregar'), 'error');
       } finally {
         document.getElementById('loading').style.display = 'none';
       }
@@ -233,16 +263,16 @@
 
       const btn = document.getElementById('salvarBtn');
       btn.disabled = true;
-      btn.textContent = 'Salvando...';
+      btn.textContent = t('presenca.salvando');
 
       try {
         await presencasAPI.salvarLista(cursoAtualId, dataAtual, registros);
-        mostrarToast('Presenças salvas com sucesso!', 'success');
+        mostrarToast(t('presenca.sucesso_salvar'), 'success');
       } catch (e) {
-        mostrarToast('Erro ao salvar presenças', 'error');
+        mostrarToast(t('presenca.erro_salvar'), 'error');
       } finally {
         btn.disabled = false;
-        btn.innerHTML = '<i data-lucide="save"></i> Salvar Presenças';
+        btn.innerHTML = '<i data-lucide="save"></i> ' + t('presenca.btn_salvar');
         lucide.createIcons();
       }
     });

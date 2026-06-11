@@ -3,13 +3,34 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Inscrições - Mensageiros da Esperança</title>
+  <title data-i18n="app.title">Inscrições - Mensageiros da Esperança</title>
   <link rel="stylesheet" href="style.css?v=1.1">
+  <style>
+    .lang-switcher {
+      background: rgba(255,255,255,0.15);
+      color: #fff;
+      border: 1px solid rgba(255,255,255,0.3);
+      border-radius: 6px;
+      padding: 0.25rem 0.5rem;
+      font-size: 0.7rem;
+      cursor: pointer;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      transition: all 0.2s;
+      line-height: 1.4;
+    }
+    .lang-switcher:hover {
+      background: rgba(255,255,255,0.3);
+      border-color: #fff;
+    }
+  </style>
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
   <script src="https://unpkg.com/lucide@latest"></script>
   <script src="https://cdn.sheetjs.com/xlsx-0.20.0/package/dist/xlsx.full.min.js"></script>
+  <script src="i18n.js"></script>
+  <script src="firebase.config.js?v=1.1"></script>
   <script src="firebase.js?v=1.1"></script>
   <script>protegerRota();</script>
 </head>
@@ -18,62 +39,63 @@
   <header class="header">
     <div class="header-logo">
       <img src="logo.jpg" alt="Logo" onerror="this.src='https://via.placeholder.com/40/2E7D32/FFFFFF?text=ME'">
-      <h1>Mensageiros da Esperança</h1>
+      <h1 data-i18n="app.name">Mensageiros da Esperança</h1>
     </div>
     <div style="display: flex; gap: 0.5rem; align-items: center;">
       <nav class="header-nav" id="navMenu">
-        <a href="dashboard.html">Dashboard</a>
-        <a href="cursos.html">Cursos</a>
-        <a href="inscricoes.html" class="ativo">Inscrições</a>
-        <a href="presenca.html">Presença</a>
+        <a href="dashboard.html"><span data-i18n="nav.dashboard">Dashboard</span></a>
+        <a href="cursos.html"><span data-i18n="nav.cursos">Cursos</span></a>
+        <a href="inscricoes.html" class="ativo"><span data-i18n="nav.inscricoes">Inscrições</span></a>
+        <a href="presenca.html"><span data-i18n="nav.presenca">Presença</span></a>
       </nav>
-      <button class="btn btn-sm" id="btnLogout" style="background: rgba(255,255,255,0.15); color: #fff;" title="Sair do Sistema">
+      <button class="lang-switcher" onclick="toggleLang()" title="Switch language" data-i18n-lang="lang.switch">PT</button>
+      <button class="btn btn-sm" id="btnLogout" style="background: rgba(255,255,255,0.15); color: #fff;" data-i18n-title="nav.sair">
         <i data-lucide="log-out"></i>
       </button>
-      <button class="menu-toggle" id="menuToggle" aria-label="Abrir menu">
+      <button class="menu-toggle" id="menuToggle" data-i18n-aria-label="nav.menu_abrir">
         <span>☰</span>
       </button>
     </div>
   </header>
 
   <main class="container">
-    <h2 class="page-title"><i data-lucide="user-plus"></i> Inscrições de Participantes</h2>
+    <h2 class="page-title"><i data-lucide="user-plus"></i> <span data-i18n="inscricoes.title">Inscrições de Participantes</span></h2>
 
     <div class="form-card">
-      <h2>Nova Inscrição</h2>
+      <h2 data-i18n="inscricoes.form.title">Nova Inscrição</h2>
       <form id="formInscricao">
         <div class="form-group">
-          <label for="nome">Nome Completo</label>
-          <input type="text" id="nome" required placeholder="Digite o nome completo">
+          <label for="nome" data-i18n="inscricoes.form.nome_label">Nome Completo</label>
+          <input type="text" id="nome" required data-i18n-placeholder="inscricoes.form.nome_placeholder" placeholder="Digite o nome completo">
         </div>
         <div class="form-group">
-          <label for="contato">Contato (Telefone ou E-mail)</label>
-          <input type="text" id="contato" required placeholder="(00) 00000-0000 ou email@exemplo.com">
+          <label for="contato" data-i18n="inscricoes.form.contato_label">Contato (Telefone ou E-mail)</label>
+          <input type="text" id="contato" required data-i18n-placeholder="inscricoes.form.contato_placeholder" placeholder="(00) 00000-0000 ou email@exemplo.com">
         </div>
         <div class="form-group">
-          <label>Cursos (Selecione um ou mais)</label>
+          <label data-i18n="inscricoes.form.cursos_label">Cursos (Selecione um ou mais)</label>
           <div id="listaCursosCheck" style="max-height: 150px; overflow-y: auto; border: 2px solid var(--border); border-radius: var(--radius-sm); padding: 0.5rem; background: #fff;">
             <!-- Checkboxes serão inseridos aqui -->
           </div>
           <small id="vagasInfo" style="display:none;margin-top:0.3rem;font-size:0.8rem;color:var(--text-light);"></small>
         </div>
-        <button type="submit" class="btn btn-primary btn-block" id="btnSubmit">Realizar Inscrição</button>
+        <button type="submit" class="btn btn-primary btn-block" id="btnSubmit"><span data-i18n="inscricoes.form.btn_inscrever">Realizar Inscrição</span></button>
       </form>
     </div>
 
     <div class="form-card">
-      <h2><i data-lucide="filter"></i> Filtro</h2>
+      <h2><i data-lucide="filter"></i> <span data-i18n="inscricoes.filtro.title">Filtro</span></h2>
       <div class="form-row">
         <div class="form-group" style="flex: 1;">
-          <label for="filtroCurso">Visualizar Participantes por Curso</label>
+          <label for="filtroCurso" data-i18n="inscricoes.filtro.label">Visualizar Participantes por Curso</label>
           <select id="filtroCurso">
-            <option value="">Todos os cursos</option>
+            <option value="" data-i18n="inscricoes.filtro.todos">Todos os cursos</option>
           </select>
         </div>
         <div class="form-group" style="display: flex; flex-direction: column; justify-content: flex-end;">
           <label style="visibility: hidden;">&nbsp;</label>
-          <button class="btn btn-secondary" onclick="exportarExcel()" id="btnExportar" title="Exportar dados da tabela para planilha Excel">
-            <i data-lucide="file-spreadsheet"></i> Exportar Excel
+          <button class="btn btn-secondary" onclick="exportarExcel()" id="btnExportar" data-i18n-title="inscricoes.filtro.exportar_tooltip">
+            <i data-lucide="file-spreadsheet"></i> <span data-i18n="inscricoes.filtro.btn_exportar">Exportar Excel</span>
           </button>
         </div>
       </div>
@@ -83,25 +105,25 @@
       <div id="batchActions" style="display:none; padding: 1rem; background: #fff3e0; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 1rem;">
         <span id="batchCount" style="font-weight: 600; color: var(--primary-dark);"></span>
         <button class="btn btn-danger btn-sm" id="btnDeleteBatch">
-          <i data-lucide="trash-2"></i> Excluir Selecionados
+          <i data-lucide="trash-2"></i> <span data-i18n="inscricoes.batch.excluir_selecionados">Excluir Selecionados</span>
         </button>
       </div>
       <table>
         <thead>
           <tr>
-            <th style="width: 40px;"><input type="checkbox" id="selecionarTodos" style="width: 18px; height: 18px; cursor: pointer;"></th>
-            <th>Nome</th>
-            <th>Contato</th>
-            <th>Curso</th>
-            <th>Data de Inscrição</th>
-            <th>Ações</th>
+            <th style="width: 40px;"><input type="checkbox" id="selecionarTodos" title="Selecionar todos" style="width: 18px; height: 18px; cursor: pointer;"></th>
+            <th data-i18n="inscricoes.table.nome">Nome</th>
+            <th data-i18n="inscricoes.table.contato">Contato</th>
+            <th data-i18n="inscricoes.table.curso">Curso</th>
+            <th data-i18n="inscricoes.table.data">Data de Inscrição</th>
+            <th data-i18n="inscricoes.table.acoes">Ações</th>
           </tr>
         </thead>
         <tbody id="tabelaParticipantes">
           <tr>
             <td colspan="6" class="loading">
               <div class="spinner"></div>
-              <p>Carregando participantes...</p>
+              <p data-i18n="inscricoes.loading">Carregando participantes...</p>
             </td>
           </tr>
         </tbody>
@@ -110,7 +132,7 @@
 
     <div id="emptyState" class="empty-state" style="display:none;">
       <i data-lucide="users-2" class="icon"></i>
-      <p>Nenhum participante encontrado para este curso.</p>
+      <p data-i18n="inscricoes.empty">Nenhum participante encontrado para este curso.</p>
     </div>
 
   </main>
@@ -119,25 +141,25 @@
   <div id="modalEdicao" class="modal" style="display:none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); align-items: center; justify-content: center;">
     <div class="modal-content" style="background-color: #fff; padding: 2rem; border-radius: var(--radius); width: 90%; max-width: 500px; box-shadow: var(--shadow);">
       <h2 style="margin-bottom: 1.5rem; color: var(--primary-dark); display: flex; align-items: center; gap: 0.5rem;">
-        <i data-lucide="edit-3"></i> Editar Participante
+        <i data-lucide="edit-3"></i> <span data-i18n="inscricoes.modal.title">Editar Participante</span>
       </h2>
       <form id="formEdicao">
         <input type="hidden" id="editParticipanteId">
         <div class="form-group">
-          <label for="editNome">Nome Completo</label>
+          <label for="editNome" data-i18n="inscricoes.modal.nome_label">Nome Completo</label>
           <input type="text" id="editNome" required>
         </div>
         <div class="form-group">
-          <label for="editContato">Contato</label>
+          <label for="editContato" data-i18n="inscricoes.modal.contato_label">Contato</label>
           <input type="text" id="editContato" required>
         </div>
         <div class="form-group">
-          <label for="editCursoSelect">Curso</label>
+          <label for="editCursoSelect" data-i18n="inscricoes.modal.curso_label">Curso</label>
           <select id="editCursoSelect" required></select>
         </div>
         <div style="display: flex; gap: 1rem; margin-top: 2rem;">
-          <button type="submit" class="btn btn-primary btn-block" id="btnSalvarEdicao">Salvar Alterações</button>
-          <button type="button" class="btn btn-secondary btn-block" onclick="fecharModal()">Cancelar</button>
+          <button type="submit" class="btn btn-primary btn-block" id="btnSalvarEdicao"><span data-i18n="inscricoes.modal.btn_salvar">Salvar Alterações</span></button>
+          <button type="button" class="btn btn-secondary btn-block" onclick="fecharModal()"><span data-i18n="inscricoes.modal.btn_cancelar">Cancelar</span></button>
         </div>
       </form>
     </div>
@@ -149,9 +171,14 @@
     let cursosCache = [];
     let participantesCache = [];
 
+    // Translate placeholders
+    document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+      el.placeholder = t(el.getAttribute('data-i18n-placeholder'));
+    });
+
     const btnLogout = document.getElementById('btnLogout');
     btnLogout?.addEventListener('click', async () => {
-      if (confirm('Deseja realmente sair do sistema?')) {
+      if (confirm(t('dashboard.confirm_sair'))) {
         await authAPI.logout();
         window.location.href = 'login.html';
       }
@@ -172,7 +199,7 @@
         const filtroCurso = document.getElementById('filtroCurso');
 
         let htmlCheck = '';
-        let opcoesFiltro = '<option value="">Todos os cursos</option>';
+        let opcoesFiltro = '<option value="">' + t('inscricoes.filtro.todos') + '</option>';
 
         cursosCache.forEach(c => {
           const label = c.nome + ' - ' + formatarDataBR(c.data);
@@ -185,10 +212,10 @@
           opcoesFiltro += '<option value="' + c.id + '">' + c.nome + '</option>';
         });
 
-        listaCheck.innerHTML = htmlCheck || '<p style="font-size: 0.8rem; color: var(--text-light);">Nenhum curso disponível.</p>';
+        listaCheck.innerHTML = htmlCheck || '<p style="font-size: 0.8rem; color: var(--text-light);">' + t('inscricoes.form.cursos_empty') + '</p>';
         filtroCurso.innerHTML = opcoesFiltro;
       } catch (e) {
-        mostrarToast('Erro ao carregar cursos: ' + e.message, 'error');
+        mostrarToast(t('inscricoes.erro_carregar') + ': ' + e.message, 'error');
       }
     }
 
@@ -196,7 +223,7 @@
       const tbody = document.getElementById('tabelaParticipantes');
       const emptyState = document.getElementById('emptyState');
 
-      tbody.innerHTML = '<tr><td colspan="6" class="loading"><div class="spinner"></div><p>Carregando...</p></td></tr>';
+      tbody.innerHTML = '<tr><td colspan="6" class="loading"><div class="spinner"></div><p>' + t('inscricoes.loading') + '</p></td></tr>';
       emptyState.style.display = 'none';
 
       try {
@@ -221,8 +248,8 @@
           html += '<td>' + formatarDataBR(p.dataInscricao) + '</td>';
           html += '<td>';
           html += '<div style="display: flex; gap: 0.5rem;">';
-          html += '<button class="btn btn-secondary btn-sm" onclick="abrirEdicao(\'' + p.id + '\')" title="Editar"><i data-lucide="edit-3"></i></button>';
-          html += '<button class="btn btn-danger btn-sm" onclick="removerParticipante(\'' + p.id + '\')" title="Excluir"><i data-lucide="trash-2"></i></button>';
+          html += '<button class="btn btn-secondary btn-sm" onclick="abrirEdicao(\'' + p.id + '\')" title="' + t('common.editar') + '"><i data-lucide="edit-3"></i></button>';
+          html += '<button class="btn btn-danger btn-sm" onclick="removerParticipante(\'' + p.id + '\')" title="' + t('common.excluir') + '"><i data-lucide="trash-2"></i></button>';
           html += '</div>';
           html += '</td>';
           html += '</tr>';
@@ -232,8 +259,8 @@
         lucide.createIcons();
         atualizarUISelecao();
       } catch (e) {
-        tbody.innerHTML = '<tr><td colspan="6" class="loading">Erro ao carregar participantes</td></tr>';
-        mostrarToast('Erro ao carregar participantes: ' + e.message, 'error');
+        tbody.innerHTML = '<tr><td colspan="6" class="loading">' + t('inscricoes.erro_carregar') + '</td></tr>';
+        mostrarToast(t('inscricoes.erro_carregar') + ': ' + e.message, 'error');
       }
     }
 
@@ -246,7 +273,7 @@
         document.getElementById('editNome').value = p.nome;
         document.getElementById('editContato').value = p.contato;
         
-        let selectHtml = '<option value="">Selecione um curso</option>';
+        let selectHtml = '<option value="">' + t('inscricoes.modal.curso_placeholder') + '</option>';
         cursosCache.forEach(c => {
           selectHtml += `<option value="${c.id}">${c.nome}</option>`;
         });
@@ -258,7 +285,7 @@
         document.getElementById('modalEdicao').style.display = 'flex';
         lucide.createIcons();
       } catch (e) {
-        mostrarToast('Erro ao buscar dados: ' + e.message, 'error');
+        mostrarToast(t('inscricoes.erro_carregar') + ': ' + e.message, 'error');
       }
     }
 
@@ -275,19 +302,19 @@
 
       const btn = document.getElementById('btnSalvarEdicao');
       btn.disabled = true;
-      btn.textContent = 'Salvando...';
+      btn.textContent = t('inscricoes.modal.salvando');
 
       try {
         await participantesAPI.atualizar(id, { nome, contato, cursoId });
-        mostrarToast('Dados atualizados com sucesso!');
+        mostrarToast(t('inscricoes.sucesso_atualizar'));
         fecharModal();
         const filtroCurso = document.getElementById('filtroCurso');
         carregarParticipantes(filtroCurso.value || null);
       } catch (e) {
-        mostrarToast('Erro ao atualizar: ' + e.message, 'error');
+        mostrarToast(t('inscricoes.erro_carregar') + ': ' + e.message, 'error');
       } finally {
         btn.disabled = false;
-        btn.textContent = 'Salvar Alterações';
+        btn.innerHTML = t('inscricoes.modal.btn_salvar');
       }
     });
 
@@ -300,7 +327,7 @@
 
       if (selecionados.length > 0) {
         batchActions.style.display = 'flex';
-        batchCount.textContent = selecionados.length + ' selecionado(s)';
+        batchCount.textContent = t('inscricoes.batch.selected').replace('{count}', selecionados.length);
       } else {
         batchActions.style.display = 'none';
       }
@@ -326,38 +353,38 @@
       const selecionados = document.querySelectorAll('.participante-checkbox:checked');
       if (selecionados.length === 0) return;
 
-      if (!confirm('Tem certeza que deseja excluir ' + selecionados.length + ' participantes?')) return;
+      if (!confirm(t('inscricoes.batch.confirm').replace('{count}', selecionados.length))) return;
 
       const btn = document.getElementById('btnDeleteBatch');
       btn.disabled = true;
-      btn.textContent = 'Excluindo...';
+      btn.innerHTML = t('inscricoes.batch.excluindo');
 
       try {
         for (const cb of selecionados) {
           await participantesAPI.remover(cb.getAttribute('data-id'));
         }
-        mostrarToast('Participantes excluídos com sucesso!');
+        mostrarToast(t('inscricoes.sucesso_batch'));
         const filtroCurso = document.getElementById('filtroCurso');
         carregarParticipantes(filtroCurso.value || null);
       } catch (e) {
-        mostrarToast('Erro ao excluir em lote: ' + e.message, 'error');
+        mostrarToast(t('inscricoes.erro_carregar') + ': ' + e.message, 'error');
       } finally {
         btn.disabled = false;
-        btn.innerHTML = '<i data-lucide="trash-2"></i> Excluir Selecionados';
+        btn.innerHTML = '<i data-lucide="trash-2"></i> ' + t('inscricoes.batch.excluir_selecionados');
         lucide.createIcons();
       }
     });
 
     async function removerParticipante(id) {
-      if (!confirm('Tem certeza que deseja excluir este participante?')) return;
+      if (!confirm(t('inscricoes.confirm_excluir'))) return;
 
       try {
         await participantesAPI.remover(id);
-        mostrarToast('Participante removido com sucesso!');
+        mostrarToast(t('inscricoes.sucesso_remover'));
         const filtroCurso = document.getElementById('filtroCurso');
         carregarParticipantes(filtroCurso.value || null);
       } catch (e) {
-        mostrarToast('Erro ao remover participante: ' + e.message, 'error');
+        mostrarToast(t('inscricoes.erro_carregar') + ': ' + e.message, 'error');
       }
     }
 
@@ -368,11 +395,11 @@
 
       try {
         btn.disabled = true;
-        btn.innerHTML = 'Gerando...';
+        btn.innerHTML = t('inscricoes.filtro.gerando');
 
         const dados = participantesCache;
         if (dados.length === 0) {
-          mostrarToast('Nenhum dado para exportar.', 'info');
+          mostrarToast(t('inscricoes.sem_dados_exportar'), 'info');
           return;
         }
 
@@ -396,10 +423,10 @@
           }
 
           return {
-            'Nome': p.nome || '-',
-            'Contato': p.contato || '-',
-            'Curso': cursoNome,
-            'Data de Inscrição': dataFormatada
+            [t('inscricoes.excel.nome_col')]: p.nome || '-',
+            [t('inscricoes.excel.contato_col')]: p.contato || '-',
+            [t('inscricoes.excel.curso_col')]: cursoNome,
+            [t('inscricoes.excel.data_col')]: dataFormatada
           };
         });
 
@@ -408,26 +435,26 @@
 
         // Ajusta largura das colunas
         ws['!cols'] = [
-          { wch: 40 }, // Nome
-          { wch: 30 }, // Contato
-          { wch: 30 }, // Curso
-          { wch: 22 }, // Data de Inscrição
+          { wch: 40 },
+          { wch: 30 },
+          { wch: 30 },
+          { wch: 22 },
         ];
 
         const wb = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(wb, ws, 'Inscrições');
+        XLSX.utils.book_append_sheet(wb, ws, t('inscricoes.excel.sheet_name'));
 
         // Nome do arquivo com data atual
         const hoje = new Date();
         const dataStr = `${hoje.getFullYear()}-${String(hoje.getMonth()+1).padStart(2,'0')}-${String(hoje.getDate()).padStart(2,'0')}`;
-        const nomeArquivo = `inscricoes_mensageiros_${dataStr}.xlsx`;
+        const nomeArquivo = t('inscricoes.excel.file_prefix') + dataStr + '.xlsx';
 
         // Gera o download
         XLSX.writeFile(wb, nomeArquivo);
 
-        mostrarToast(`Planilha exportada: ${nomeArquivo}`, 'success');
+        mostrarToast(t('inscricoes.excel.exportado').replace('{arquivo}', nomeArquivo), 'success');
       } catch (e) {
-        mostrarToast('Erro ao exportar Excel: ' + e.message, 'error');
+        mostrarToast(t('inscricoes.erro_exportar').replace('{msg}', e.message), 'error');
         console.error('Erro exportação:', e);
       } finally {
         btn.disabled = false;
@@ -444,7 +471,7 @@
       const cursosSelecionados = Array.from(document.querySelectorAll('input[name="curso"]:checked')).map(cb => cb.value);
 
       if (!nome || !contato || cursosSelecionados.length === 0) {
-        mostrarToast('Preencha nome, contato e selecione ao menos um curso.', 'error');
+        mostrarToast(t('inscricoes.erro_validacao'), 'error');
         return;
       }
 
@@ -452,13 +479,13 @@
       const isPhone = /^(\(?\d{2}\)?\s?)?(\d{4,5}-?\d{4})$/.test(contato.replace(/\s/g, ''));
       
       if (!isEmail && !isPhone) {
-        mostrarToast('Contato inválido. Use um e-mail real ou telefone com DDD.', 'error');
+        mostrarToast(t('inscricoes.erro_contato'), 'error');
         return;
       }
 
       const btnSubmit = document.getElementById('btnSubmit');
       btnSubmit.disabled = true;
-      btnSubmit.textContent = 'Inscrevendo...';
+      btnSubmit.textContent = t('inscricoes.form.inscrevendo');
 
       try {
         const inscritosAtuais = await participantesAPI.listar();
@@ -480,16 +507,16 @@
           }
         }
 
-        if (novos > 0) mostrarToast(`Inscrição realizada em ${novos} curso(s)!`);
-        if (pulados > 0) mostrarToast(`${pulados} inscrição(ões) ignorada(s) por já existirem.`, 'info');
+        if (novos > 0) mostrarToast(t('inscricoes.sucesso_inscricao').replace('{novos}', novos));
+        if (pulados > 0) mostrarToast(t('inscricoes.aviso_pulados').replace('{pulados}', pulados), 'info');
 
         document.getElementById('formInscricao').reset();
         carregarParticipantes(document.getElementById('filtroCurso').value || null);
       } catch (e) {
-        mostrarToast('Erro ao realizar inscrição: ' + e.message, 'error');
+        mostrarToast(t('inscricoes.erro_carregar') + ': ' + e.message, 'error');
       } finally {
         btnSubmit.disabled = false;
-        btnSubmit.textContent = 'Realizar Inscrição';
+        btnSubmit.innerHTML = t('inscricoes.form.btn_inscrever');
       }
     });
 

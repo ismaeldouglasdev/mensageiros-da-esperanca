@@ -3,12 +3,33 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Mensageiros da Esperança - Dashboard</title>
+  <title data-i18n="app.title">Mensageiros da Esperança - Dashboard</title>
   <link rel="stylesheet" href="style.css?v=1.1">
+  <style>
+    .lang-switcher {
+      background: rgba(255,255,255,0.15);
+      color: #fff;
+      border: 1px solid rgba(255,255,255,0.3);
+      border-radius: 6px;
+      padding: 0.25rem 0.5rem;
+      font-size: 0.7rem;
+      cursor: pointer;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      transition: all 0.2s;
+      line-height: 1.4;
+    }
+    .lang-switcher:hover {
+      background: rgba(255,255,255,0.3);
+      border-color: #fff;
+    }
+  </style>
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
   <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="i18n.js"></script>
+  <script src="firebase.config.js?v=1.1"></script>
   <script src="firebase.js?v=1.1"></script>
   <script>protegerRota();</script>
 </head>
@@ -16,74 +37,75 @@
   <header class="header">
     <div class="header-logo">
       <img src="logo.jpg" alt="Logo" onerror="this.src='https://via.placeholder.com/40/2E7D32/FFFFFF?text=ME'">
-      <h1>Mensageiros da Esperança</h1>
+      <h1 data-i18n="app.name">Mensageiros da Esperança</h1>
     </div>
     <div style="display: flex; gap: 0.5rem; align-items: center;">
       <nav class="header-nav" id="navMenu">
-        <a href="dashboard.html" class="ativo">Dashboard</a>
-        <a href="cursos.html">Cursos</a>
-        <a href="inscricoes.html">Inscrições</a>
-        <a href="presenca.html">Presença</a>
+        <a href="dashboard.html" class="ativo"><span data-i18n="nav.dashboard">Dashboard</span></a>
+        <a href="cursos.html"><span data-i18n="nav.cursos">Cursos</span></a>
+        <a href="inscricoes.html"><span data-i18n="nav.inscricoes">Inscrições</span></a>
+        <a href="presenca.html"><span data-i18n="nav.presenca">Presença</span></a>
       </nav>
-      <button class="btn btn-sm" id="btnLogout" style="background: rgba(255,255,255,0.15); color: #fff;" title="Sair do Sistema">
+      <button class="lang-switcher" onclick="toggleLang()" title="Switch language" data-i18n-lang="lang.switch">PT</button>
+      <button class="btn btn-sm" id="btnLogout" style="background: rgba(255,255,255,0.15); color: #fff;" data-i18n-title="nav.sair">
         <i data-lucide="log-out"></i>
       </button>
-      <button class="menu-toggle" id="menuToggle" aria-label="Abrir menu">
+      <button class="menu-toggle" id="menuToggle" data-i18n-aria-label="nav.menu_abrir">
         <span>☰</span>
       </button>
     </div>
   </header>
 
   <main class="container">
-    <h2 class="page-title"><i data-lucide="layout-dashboard"></i> Dashboard</h2>
+    <h2 class="page-title"><i data-lucide="layout-dashboard"></i> <span data-i18n="dashboard.title">Dashboard</span></h2>
 
     <div class="loading" id="loading">
       <div class="spinner"></div>
-      <p>Carregando dados...</p>
+      <p data-i18n="dashboard.loading">Carregando dados...</p>
     </div>
 
     <div id="content" style="display: none;">
       <div class="cards-grid">
         <div class="card">
           <div class="card-icon" style="color: var(--primary)"><i data-lucide="book-open"></i></div>
-          <h3>Cursos Ativos</h3>
+          <h3 data-i18n="dashboard.card.cursos_ativos">Cursos Ativos</h3>
           <p class="valor" id="total-cursos">0</p>
         </div>
         <div class="card">
           <div class="card-icon" style="color: var(--accent)"><i data-lucide="users"></i></div>
-          <h3>Pessoas Atendidas</h3>
+          <h3 data-i18n="dashboard.card.pessoas_atendidas">Pessoas Atendidas</h3>
           <p class="valor" id="total-participantes-unicos">0</p>
           <small id="total-matriculas" style="color: var(--text-light); font-size: 0.75rem;"></small>
         </div>
         <div class="card">
           <div class="card-icon" style="color: var(--secondary)"><i data-lucide="map-pin"></i></div>
-          <h3>Unidades</h3>
+          <h3 data-i18n="dashboard.card.unidades">Unidades</h3>
           <p class="valor">3</p>
         </div>
         <div class="card">
           <div class="card-icon" style="color: var(--success)"><i data-lucide="check-circle"></i></div>
-          <h3>Presenças</h3>
+          <h3 data-i18n="dashboard.card.presencas">Presenças</h3>
           <p class="valor" id="total-presencas">0</p>
         </div>
       </div>
 
       <section class="table-section">
-        <h3><i data-lucide="clock"></i> Últimas Presenças</h3>
+        <h3><i data-lucide="clock"></i> <span data-i18n="dashboard.ultimas_presencas">Últimas Presenças</span></h3>
         <div class="table-container">
           <table id="presencas-table">
             <thead>
               <tr>
-                <th>Data</th>
-                <th>Participante</th>
-                <th>Curso</th>
-                <th>Unidade</th>
+                <th data-i18n="dashboard.table.data">Data</th>
+                <th data-i18n="dashboard.table.participante">Participante</th>
+                <th data-i18n="dashboard.table.curso">Curso</th>
+                <th data-i18n="dashboard.table.unidade">Unidade</th>
               </tr>
             </thead>
             <tbody id="presencas-tbody"></tbody>
           </table>
           <div class="empty-state" id="empty-presencas" style="display: none;">
             <i data-lucide="calendar-x" class="icon"></i>
-            <p>Nenhuma presença registrada ainda.</p>
+            <p data-i18n="dashboard.empty_presencas">Nenhuma presença registrada ainda.</p>
           </div>
         </div>
       </section>
@@ -106,7 +128,7 @@
       });
       
       btnLogout?.addEventListener('click', async () => {
-        if (confirm('Deseja realmente sair do sistema?')) {
+        if (confirm(t('dashboard.confirm_sair'))) {
           await authAPI.logout();
           window.location.href = 'login.html';
         }
@@ -140,7 +162,7 @@
 
         totalCursosEl.textContent = cursos.length;
         document.getElementById('total-participantes-unicos').textContent = totalUnicos;
-        document.getElementById('total-matriculas').textContent = `${totalParticipantes} matrículas ativas`;
+        document.getElementById('total-matriculas').textContent = t('dashboard.card.matriculas').replace('{count}', totalParticipantes);
         totalPresencasEl.textContent = totalPresencasCount;
 
         if (ultimasPresencas.length === 0) {
@@ -176,7 +198,7 @@
         lucide.createIcons();
       } catch (error) {
         console.error('Erro ao carregar dados:', error);
-        showToast('Erro ao carregar dados do dashboard.', 'error');
+        showToast(t('dashboard.erro_carregar'), 'error');
         loading.style.display = 'none';
         content.style.display = 'block';
       }
