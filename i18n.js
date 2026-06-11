@@ -449,9 +449,9 @@ function applyTranslations() {
     el.textContent = t(el.getAttribute('data-i18n'));
   });
 
-  // Update lang switcher button text
+  // Update lang switcher button text — always show the OTHER language code
   document.querySelectorAll('[data-i18n-lang]').forEach(el => {
-    el.textContent = lang === 'pt-BR' ? t('lang.other') : t('lang.switch');
+    el.textContent = t('lang.other');
   });
 }
 
