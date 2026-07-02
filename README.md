@@ -1,5 +1,9 @@
-# Mensageiros da Esperança — Sistema de Gestão
 <p align="center">
+  <strong>🇧🇷 Português</strong> &nbsp;|&nbsp; <a href="README.en.md">🇺🇸 English</a>
+</p>
+
+# Mensageiros da Esperança — Sistema de Gestão
+
   <strong>🇧🇷 Português</strong> &nbsp;|&nbsp; <a href="README.en.md">🇺🇸 English</a>
 </p>
 
