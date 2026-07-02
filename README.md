@@ -1,4 +1,8 @@
 # Mensageiros da Esperança — Sistema de Gestão
+<p align="center">
+  <strong>🇧🇷 Português</strong> &nbsp;|&nbsp; <a href="README.en.md">🇺🇸 English</a>
+</p>
+
 
 Sistema web para digitalizar e centralizar o controle de **cursos, participantes, presenças e atendimentos** da ONG **Mensageiros da Esperança**
 
