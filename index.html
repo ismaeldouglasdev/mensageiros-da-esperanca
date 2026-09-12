@@ -3,253 +3,286 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Mensageiros da Esperança — sistema de gestão social para ONGs: cursos, inscrições, presença digital e dashboard completo com Firebase.">
+  <meta name="theme-color" content="#1F4540">
+  <meta property="og:title" content="Mensageiros da Esperança — Gestão Social que transforma">
+  <meta property="og:description" content="Sistema de gestão para ONGs — cursos, inscrições, presença digital e dashboard completo com Firebase.">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="logo.jpg">
   <title data-i18n="app.title">Mensageiros da Esperança — Gestão Social</title>
   <link rel="icon" href="logo.jpg">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..700;1,9..144,400..700&family=Manrope:wght@400..800&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="landing.css">
   <script src="i18n.js"></script>
-  <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      background: #F8F9FA;
-      color: #2D3436;
-      line-height: 1.6;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-    }
-    a { text-decoration: none; }
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main" data-i18n="a11y.skip">Pular para o conteúdo</a>
 
-    /* Nav */
-    .nav {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 0 1.25rem;
-      height: 64px;
-      background: linear-gradient(135deg, #2A5C56, #3D968A);
-      color: #fff;
-      box-shadow: 0 2px 15px rgba(0,0,0,0.1);
-    }
-    .nav-logo {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      font-size: 1.1rem;
-      font-weight: 700;
-    }
-    .nav-logo img {
-      height: 36px;
-      width: auto;
-      border-radius: 8px;
-      object-fit: contain;
-      border: 1px solid rgba(255,255,255,0.2);
-      padding: 3px;
-      background: rgba(255,255,255,0.1);
-    }
-    .nav-links { display: flex; gap: 0.5rem; align-items: center; }
-    .nav-links a {
-      font-size: 0.85rem;
-      color: rgba(255,255,255,0.85);
-      padding: 0.4rem 1rem;
-      border: 1px solid rgba(255,255,255,0.2);
-      border-radius: 8px;
-      transition: all 0.2s;
-    }
-    .nav-links a:hover {
-      color: #fff;
-      border-color: #fff;
-      background: rgba(255,255,255,0.1);
-    }
-    .btn-primary {
-      background: #fff !important;
-      color: #2A5C56 !important;
-      border-color: #fff !important;
-      font-weight: 600;
-    }
-    .btn-primary:hover {
-      background: #E8EDED !important;
-    }
+  <header class="site-header" id="siteHeader">
+    <div class="container">
+      <nav class="nav" aria-label="Navegação principal">
+        <a href="index.html" class="brand" aria-label="Mensageiros da Esperança — página inicial">
+          <span class="brand-mark"><img src="logo.jpg" alt="" onerror="this.style.display='none'"></span>
+          <span class="brand-name" data-i18n="app.name">Mensageiros da Esperança</span>
+        </a>
+        <div class="nav-actions">
+          <button class="lang-switcher" onclick="toggleLang()" title="Switch language" data-i18n-lang="lang.switch">PT</button>
+          <a href="login.html" class="btn btn-primary nav-login" data-i18n-aria-label="nav.entrar" aria-label="Entrar">
+            <i data-lucide="log-in"></i><span data-i18n="nav.entrar">Entrar</span>
+          </a>
+        </div>
+      </nav>
+    </div>
+  </header>
 
-    /* Lang switcher */
-    .lang-switcher {
-      background: rgba(255,255,255,0.15);
-      color: #fff;
-      border: 1px solid rgba(255,255,255,0.3);
-      border-radius: 6px;
-      padding: 0.3rem 0.55rem;
-      font-size: 0.75rem;
-      cursor: pointer;
-      font-weight: 700;
-      letter-spacing: 0.5px;
-      transition: all 0.2s;
-      line-height: 1;
-    }
-    .lang-switcher:hover {
-      background: rgba(255,255,255,0.3);
-      border-color: #fff;
-    }
+  <main id="main">
+    <!-- ===================== HERO ===================== -->
+    <section class="hero">
+      <div class="container hero-grid">
+        <div class="hero-copy">
+          <p class="eyebrow hero-eyebrow rise" data-i18n="hero.eyebrow">Projeto de Extensão II · ADS</p>
+          <h1 class="hero-title rise rise-up-2">
+            <span data-i18n="hero.title">Gestão Social</span>
+            <span class="title-em" data-i18n="hero.title_span">que transforma</span>
+          </h1>
+          <p class="hero-sub rise rise-up-3" data-i18n="hero.subtitle">
+            Sistema de gestão para ONGs — cadastro de cursos, inscrições, presença digital
+            e dashboard completo com Firebase.
+          </p>
+          <div class="hero-actions rise rise-up-4">
+            <a href="login.html" class="btn btn-primary">
+              <span data-i18n="hero.cta_login">Acessar o sistema</span>
+              <i data-lucide="arrow-right" class="arrow"></i>
+            </a>
+            <a href="#funcionalidades" class="btn btn-soft">
+              <span data-i18n="hero.cta_more">Conhecer o sistema</span>
+            </a>
+          </div>
+        </div>
 
-    /* Hero */
-    .hero {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 4rem 2rem;
-      text-align: center;
-      background: linear-gradient(135deg, #F8F9FA 0%, #E8EDED 50%, #F0F5F0 100%);
-    }
-    .hero-icon { margin-bottom: 1.5rem; }
-    .hero-icon img {
-      height: 90px;
-      width: auto;
-      border-radius: 8px;
-      object-fit: contain;
-      border: 1px solid #E9ECEF;
-      padding: 6px;
-      background: #fff;
-      box-shadow: 0 4px 20px rgba(42,92,86,0.1);
-    }
-    .hero h1 {
-      font-size: clamp(1.8rem, 4vw, 2.8rem);
-      font-weight: 800;
-      line-height: 1.15;
-      margin-bottom: 0.5rem;
-      color: #2D3436;
-    }
-    .hero h1 span { color: #2A5C56; }
-    .hero .subtitle {
-      font-size: 1rem;
-      color: #636E72;
-      max-width: 480px;
-      margin: 0 auto 1.5rem;
-    }
-    .hero-actions {
-      display: flex;
-      gap: 0.75rem;
-      flex-wrap: wrap;
-      justify-content: center;
-    }
-    .hero-actions a {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.4rem;
-      padding: 0.75rem 1.75rem;
-      font-size: 0.95rem;
-      font-weight: 600;
-      border-radius: 12px;
-      transition: all 0.2s;
-    }
-    .hero-actions a:hover { transform: translateY(-1px); }
-    .btn-solid {
-      background: #2A5C56;
-      color: #fff !important;
-    }
-    .btn-solid:hover { background: #1F4540 !important; }
+        <div class="hero-visual rise rise-up-3">
+          <div class="hero-glow gold" aria-hidden="true"></div>
+          <div class="hero-glow pine" aria-hidden="true"></div>
 
-    /* Features */
-    .features {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-      gap: 1rem;
-      max-width: 620px;
-      width: 100%;
-      margin-top: 3rem;
-      text-align: left;
-    }
-    .feature-card {
-      padding: 1.25rem;
-      background: #fff;
-      border: 1px solid #E9ECEF;
-      border-radius: 12px;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.05);
-    }
-    .feature-card .icon { font-size: 1.4rem; margin-bottom: 0.4rem; }
-    .feature-card h3 { font-size: 0.9rem; margin-bottom: 0.25rem; }
-    .feature-card p {
-      font-size: 0.78rem;
-      color: #636E72;
-      line-height: 1.5;
-    }
+          <div class="panel-shell">
+            <div class="panel-core">
+              <div class="panel-frame">
+                <img src="logo.jpg" alt="Mensageiros da Esperança — logotipo da ONG" onerror="this.src='https://via.placeholder.com/1280x510/F1EADC/2A5C56?text=Mensageiros%20da%20Esperan%C3%A7a'">
+              </div>
+              <div class="panel-bar" aria-hidden="true">
+                <div class="panel-dots"><span></span><span></span><span></span></div>
+                <span class="chip-mini"><i data-lucide="globe"></i>mensageiros-da-esperanca.vercel.app</span>
+              </div>
+              <div class="panel-metrics" aria-hidden="true">
+                <div class="metric">
+                  <i data-lucide="book-open"></i>
+                  <span class="m-label" data-i18n="features.cursos.title">Cursos</span>
+                  <div class="bar-track"><span class="bar-fill w-1"></span></div>
+                </div>
+                <div class="metric">
+                  <i data-lucide="users"></i>
+                  <span class="m-label" data-i18n="features.inscricoes.title">Inscrições</span>
+                  <div class="bar-track"><span class="bar-fill w-2"></span></div>
+                </div>
+                <div class="metric">
+                  <i data-lucide="calendar-check"></i>
+                  <span class="m-label" data-i18n="features.presenca.title">Presença</span>
+                  <div class="bar-track"><span class="bar-fill w-3"></span></div>
+                </div>
+              </div>
+            </div>
+          </div>
 
-    .footer {
-      text-align: center;
-      padding: 1.5rem 2rem;
-      border-top: 1px solid #E9ECEF;
-      font-size: 0.75rem;
-      color: #636E72;
-      background: #F8F9FA;
-    }
+          <div class="hero-chip chip-a" aria-hidden="true">
+            <i data-lucide="calendar-check"></i>
+            <span data-i18n="features.presenca.title">Presença</span>
+            <span class="dot"></span>
+          </div>
+          <div class="hero-chip chip-b" aria-hidden="true">
+            <i data-lucide="shield-check"></i>
+            <span data-i18n="features.auth.title">Autenticação</span>
+            <span class="dot"></span>
+          </div>
+        </div>
+      </div>
+    </section>
 
-    @media (max-width: 480px) {
-      .nav { padding: 0 1rem; flex-direction: column; height: auto; gap: 0.5rem; padding: 0.75rem 1rem; }
-      .hero { padding: 2.5rem 1rem; }
-      .features { grid-template-columns: 1fr; }
-    }
-  </style>
-  </head>
-  <body>
-    <nav class="nav">
-      <div class="nav-logo">
-        <img src="logo.jpg" alt="Logo" onerror="this.style.display='none'">
+    <!-- ===================== RECURSOS ===================== -->
+    <section id="funcionalidades" class="section">
+      <div class="container">
+        <header class="section-head reveal">
+          <p class="eyebrow" data-i18n="features.eyebrow">Recursos</p>
+          <h2 class="section-title" data-i18n="features.title">Tudo o que sua ONG precisa em um só lugar</h2>
+        </header>
+
+        <div class="feature-grid">
+          <article class="feature-card narrow reveal">
+            <div class="feature-top">
+              <div class="feature-icon"><i data-lucide="book-open"></i></div>
+              <span class="feature-num" aria-hidden="true">01</span>
+            </div>
+            <h3 class="feature-title" data-i18n="features.cursos.title">Cursos</h3>
+            <p class="feature-desc" data-i18n="features.cursos.desc">Cadastro e gerenciamento de cursos com informações completas.</p>
+          </article>
+
+          <article class="feature-card half reveal">
+            <div class="feature-top">
+              <div class="feature-icon"><i data-lucide="user-plus"></i></div>
+              <span class="feature-num" aria-hidden="true">02</span>
+            </div>
+            <h3 class="feature-title" data-i18n="features.inscricoes.title">Inscrições</h3>
+            <p class="feature-desc" data-i18n="features.inscricoes.desc">Controle de inscrições e participantes por curso.</p>
+          </article>
+
+          <article class="feature-card half reveal">
+            <div class="feature-top">
+              <div class="feature-icon"><i data-lucide="calendar-check"></i></div>
+              <span class="feature-num" aria-hidden="true">03</span>
+            </div>
+            <h3 class="feature-title" data-i18n="features.presenca.title">Presença</h3>
+            <p class="feature-desc" data-i18n="features.presenca.desc">Registro digital de presença com histórico.</p>
+          </article>
+
+          <article class="feature-card wide reveal">
+            <div class="feature-top">
+              <div class="feature-icon"><i data-lucide="bar-chart-3"></i></div>
+              <span class="feature-num" aria-hidden="true">04</span>
+            </div>
+            <h3 class="feature-title" data-i18n="features.dashboard.title">Dashboard</h3>
+            <p class="feature-desc" data-i18n="features.dashboard.desc">Visão geral com indicadores e últimas atividades.</p>
+            <div class="chart" aria-hidden="true">
+              <span></span><span></span><span></span><span></span>
+              <span class="hl"></span><span></span><span></span><span></span>
+            </div>
+          </article>
+
+          <article class="feature-card wide reveal">
+            <div class="feature-top">
+              <div class="feature-icon"><i data-lucide="shield-check"></i></div>
+              <span class="feature-num" aria-hidden="true">05</span>
+            </div>
+            <h3 class="feature-title" data-i18n="features.auth.title">Autenticação</h3>
+            <p class="feature-desc" data-i18n="features.auth.desc">Login seguro com Firebase Auth e controle de acesso por usuário.</p>
+          </article>
+
+          <article class="feature-card narrow reveal">
+            <div class="feature-top">
+              <div class="feature-icon"><i data-lucide="smartphone"></i></div>
+              <span class="feature-num" aria-hidden="true">06</span>
+            </div>
+            <h3 class="feature-title" data-i18n="features.responsivo.title">Responsivo</h3>
+            <p class="feature-desc" data-i18n="features.responsivo.desc">Acesso completo pelo celular com layout adaptado para qualquer tela.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== COMO FUNCIONA ===================== -->
+    <section class="how">
+      <div class="container">
+        <header class="section-head reveal">
+          <p class="eyebrow" data-i18n="how.eyebrow">Como funciona</p>
+          <h2 class="section-title" data-i18n="how.title">Do cadastro à presença em três passos</h2>
+        </header>
+
+        <div class="steps">
+          <div class="step-card reveal">
+            <div class="step-head">
+              <div class="step-icon"><i data-lucide="file-plus-2"></i></div>
+              <span class="step-num" aria-hidden="true">01</span>
+            </div>
+            <h3 class="step-title" data-i18n="how.step1.title">Cadastre os cursos</h3>
+            <p class="step-desc" data-i18n="how.step1.desc">Crie atividades com data, horário, vagas, responsável e unidade.</p>
+          </div>
+
+          <div class="step-card reveal">
+            <div class="step-head">
+              <div class="step-icon"><i data-lucide="users"></i></div>
+              <span class="step-num" aria-hidden="true">02</span>
+            </div>
+            <h3 class="step-title" data-i18n="how.step2.title">Faça as inscrições</h3>
+            <p class="step-desc" data-i18n="how.step2.desc">Controle participantes por curso, com contato e lista organizada.</p>
+          </div>
+
+          <div class="step-card reveal">
+            <div class="step-head">
+              <div class="step-icon"><i data-lucide="clipboard-check"></i></div>
+              <span class="step-num" aria-hidden="true">03</span>
+            </div>
+            <h3 class="step-title" data-i18n="how.step3.title">Registre a presença</h3>
+            <p class="step-desc" data-i18n="how.step3.desc">Chamada digital rápida, com histórico completo por aula.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== CTA ===================== -->
+    <section class="cta">
+      <div class="container">
+        <p class="eyebrow reveal" data-i18n="cta.eyebrow">Pronto para começar?</p>
+        <h2 class="cta-title reveal" data-i18n="cta.title">Transforme a gestão da sua ONG</h2>
+        <p class="cta-desc reveal" data-i18n="cta.desc">
+          Crie o acesso da sua unidade e acompanhe cursos, inscrições e presenças da comunidade em um só lugar.
+        </p>
+        <div class="reveal">
+          <a href="login.html" class="btn btn-gold">
+            <span data-i18n="cta.btn">Acessar o sistema</span>
+            <i data-lucide="arrow-right" class="arrow"></i>
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div class="footer-brand">
+        <span class="brand-mark"><img src="logo.jpg" alt="" onerror="this.style.display='none'"></span>
         <span data-i18n="app.name">Mensageiros da Esperança</span>
       </div>
-      <div class="nav-links">
-        <button class="lang-switcher" onclick="toggleLang()" title="Switch language" data-i18n-lang="lang.switch">PT</button>
-        <a href="login.html" class="btn-primary"><span data-i18n="nav.entrar">Entrar</span></a>
-      </div>
-    </nav>
+      <p class="footer-tagline" data-i18n="footer.tagline">Gestão social para ONGs com propósito.</p>
+      <p class="footer-meta" data-i18n="footer.text">Mensageiros da Esperança — Projeto de Extensão II (ADS)</p>
+    </div>
+  </footer>
 
-    <main class="hero">
-      <div class="hero-icon">
-        <img src="logo.jpg" alt="Logo" onerror="this.src='https://via.placeholder.com/80/2A5C56/FFFFFF?text=ME'">
-      </div>
-      <h1><span data-i18n="hero.title">Gestão Social</span><br><span data-i18n="hero.title_span">que transforma</span></h1>
-      <p class="subtitle" data-i18n="hero.subtitle">
-        Sistema de gestão para ONGs — cadastro de cursos, inscrições, presença digital
-        e dashboard completo com Firebase.
-      </p>
-      <div class="hero-actions">
-        <a href="login.html" class="btn-solid"><span data-i18n="hero.cta_login">Fazer Login →</span></a>
-      </div>
+  <div class="grain" aria-hidden="true"></div>
 
-      <div class="features">
-        <div class="feature-card">
-          <div class="icon">📋</div>
-          <h3 data-i18n="features.cursos.title">Cursos</h3>
-          <p data-i18n="features.cursos.desc">Cadastro e gerenciamento de cursos com informações completas.</p>
-        </div>
-        <div class="feature-card">
-          <div class="icon">✍️</div>
-          <h3 data-i18n="features.inscricoes.title">Inscrições</h3>
-          <p data-i18n="features.inscricoes.desc">Controle de inscrições e participantes por curso.</p>
-        </div>
-        <div class="feature-card">
-          <div class="icon">✅</div>
-          <h3 data-i18n="features.presenca.title">Presença</h3>
-          <p data-i18n="features.presenca.desc">Registro digital de presença com histórico.</p>
-        </div>
-        <div class="feature-card">
-          <div class="icon">📊</div>
-          <h3 data-i18n="features.dashboard.title">Dashboard</h3>
-          <p data-i18n="features.dashboard.desc">Visão geral com indicadores e últimas atividades.</p>
-        </div>
-        <div class="feature-card">
-          <div class="icon">🔐</div>
-          <h3 data-i18n="features.auth.title">Autenticação</h3>
-          <p data-i18n="features.auth.desc">Login seguro com Firebase Auth e controle de acesso por usuário.</p>
-        </div>
-        <div class="feature-card">
-          <div class="icon">📱</div>
-          <h3 data-i18n="features.responsivo.title">Responsivo</h3>
-          <p data-i18n="features.responsivo.desc">Acesso completo pelo celular com layout adaptado para qualquer tela.</p>
-        </div>
-      </div>
-    </main>
+  <script>
+    document.body.classList.add('js');
+    lucide.createIcons();
 
-    <footer class="footer" data-i18n="footer.text">
-      Mensageiros da Esperança — Projeto de Extensão II (ADS)
-    </footer>
+    // Nav — sombra ao rolar
+    const header = document.getElementById('siteHeader');
+    const onScroll = () => header.classList.toggle('scrolled', window.scrollY > 10);
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+
+    // Reveal on scroll (IntersectionObserver — substitui animações estáticas no load)
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const revealEls = document.querySelectorAll('.reveal');
+    if (reduced || !('IntersectionObserver' in window)) {
+      revealEls.forEach(el => el.classList.add('is-in'));
+    } else {
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-in');
+            io.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.15, rootMargin: '0px 0px -6% 0px' });
+      revealEls.forEach(el => io.observe(el));
+    }
+
+    // Tradução após ícones (evita sobreposição de texto nos chips)
+    document.addEventListener('DOMContentLoaded', () => {
+      setTimeout(() => { if (window.lucide) lucide.createIcons(); }, 120);
+    });
+  </script>
 </body>
 </html>

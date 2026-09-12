@@ -22,13 +22,18 @@ const i18n = {
       editar: 'Editar',
       excluir: 'Excluir'
     },
+    a11y: { skip: 'Pular para o conteúdo' },
     hero: {
+      eyebrow: 'Projeto de Extensão II · ADS',
       title: 'Gestão Social',
       title_span: 'que transforma',
       subtitle: 'Sistema de gestão para ONGs — cadastro de cursos, inscrições, presença digital e dashboard completo com Firebase.',
-      cta_login: 'Fazer Login →'
+      cta_login: 'Acessar o sistema',
+      cta_more: 'Conhecer o sistema'
     },
     features: {
+      eyebrow: 'Recursos',
+      title: 'Tudo o que sua ONG precisa em um só lugar',
       cursos:  { title: 'Cursos',        desc: 'Cadastro e gerenciamento de cursos com informações completas.' },
       inscricoes: { title: 'Inscrições',  desc: 'Controle de inscrições e participantes por curso.' },
       presenca:   { title: 'Presença',    desc: 'Registro digital de presença com histórico.' },
@@ -36,7 +41,23 @@ const i18n = {
       auth:       { title: 'Autenticação', desc: 'Login seguro com Firebase Auth e controle de acesso por usuário.' },
       responsivo: { title: 'Responsivo',  desc: 'Acesso completo pelo celular com layout adaptado para qualquer tela.' }
     },
-    footer: { text: 'Mensageiros da Esperança — Projeto de Extensão II (ADS)' },
+    how: {
+      eyebrow: 'Como funciona',
+      title: 'Do cadastro à presença em três passos',
+      step1: { title: 'Cadastre os cursos', desc: 'Crie atividades com data, horário, vagas, responsável e unidade.' },
+      step2: { title: 'Faça as inscrições', desc: 'Controle participantes por curso, com contato e lista organizada.' },
+      step3: { title: 'Registre a presença', desc: 'Chamada digital rápida, com histórico completo por aula.' }
+    },
+    cta: {
+      eyebrow: 'Pronto para começar?',
+      title: 'Transforme a gestão da sua ONG',
+      desc: 'Crie o acesso da sua unidade e acompanhe cursos, inscrições e presenças da comunidade em um só lugar.',
+      btn: 'Acessar o sistema'
+    },
+    footer: {
+      text: 'Mensageiros da Esperança — Projeto de Extensão II (ADS)',
+      tagline: 'Gestão social para ONGs com propósito.'
+    },
     login: {
       title: 'Login',
       subtitle: 'Sistema de Gestão',
@@ -200,13 +221,18 @@ const i18n = {
       editar: 'Edit',
       excluir: 'Delete'
     },
+    a11y: { skip: 'Skip to content' },
     hero: {
+      eyebrow: 'Extension Project II · CS',
       title: 'Social Management',
       title_span: 'that transforms',
       subtitle: 'NGO management system — course registration, enrollments, digital attendance tracking and full dashboard powered by Firebase.',
-      cta_login: 'Sign In →'
+      cta_login: 'Access the system',
+      cta_more: 'Learn more'
     },
     features: {
+      eyebrow: 'Features',
+      title: 'Everything your NGO needs in one place',
       cursos:  { title: 'Courses',        desc: 'Register and manage courses with complete information.' },
       inscricoes: { title: 'Enrollments',  desc: 'Track enrollments and participants per course.' },
       presenca:   { title: 'Attendance',   desc: 'Digital attendance recording with history.' },
@@ -214,7 +240,23 @@ const i18n = {
       auth:       { title: 'Authentication', desc: 'Secure login with Firebase Auth and per-user access control.' },
       responsivo: { title: 'Responsive',   desc: 'Full access from your phone with a layout adapted to any screen.' }
     },
-    footer: { text: 'Messengers of Hope — Extension Project II (CS)' },
+    how: {
+      eyebrow: 'How it works',
+      title: 'From registration to attendance in three steps',
+      step1: { title: 'Create courses', desc: 'Set up activities with date, time, slots, instructor and unit.' },
+      step2: { title: 'Enroll participants', desc: 'Track participants per course, with contact and a clean list.' },
+      step3: { title: 'Record attendance', desc: 'Fast digital roll call, with full history per class.' }
+    },
+    cta: {
+      eyebrow: 'Ready to start?',
+      title: 'Transform your NGO management',
+      desc: 'Set up your unit access and track courses, enrollments and community attendance in one place.',
+      btn: 'Access the system'
+    },
+    footer: {
+      text: 'Messengers of Hope — Extension Project II (CS)',
+      tagline: 'Social management for NGOs with purpose.'
+    },
     login: {
       title: 'Login',
       subtitle: 'Management System',
