@@ -1,9 +1,9 @@
-// i18n.js — Translation system for Mensageiros da Esperança
+// i18n.js - Translation system for Mensageiros da Esperança
 // Supports pt-BR (default) and English
 
 const i18n = {
   'pt-BR': {
-    app: { name: 'Mensageiros da Esperança', title: 'Mensageiros da Esperança — Gestão Social' },
+    app: { name: 'Mensageiros da Esperança', title: 'Mensageiros da Esperança | Gestão Social' },
     lang: { name: 'Português', switch: 'PT', other: 'EN' },
     nav: {
       dashboard: 'Dashboard',
@@ -27,7 +27,7 @@ const i18n = {
       eyebrow: 'Projeto de Extensão II · ADS',
       title: 'Gestão Social',
       title_span: 'que transforma',
-      subtitle: 'Sistema de gestão para ONGs — cadastro de cursos, inscrições, presença digital e dashboard completo com Firebase.',
+      subtitle: 'Sistema de gestão social para ONGs. Cadastre cursos, gerencie inscrições, registre presença e acompanhe tudo no dashboard.',
       cta_login: 'Acessar o sistema',
       cta_more: 'Conhecer o sistema'
     },
@@ -55,7 +55,7 @@ const i18n = {
       btn: 'Acessar o sistema'
     },
     footer: {
-      text: 'Mensageiros da Esperança — Projeto de Extensão II (ADS)',
+      text: 'Mensageiros da Esperança · Projeto de Extensão II (ADS)',
       tagline: 'Gestão social para ONGs com propósito.'
     },
     login: {
@@ -202,7 +202,7 @@ const i18n = {
   },
 
   'en': {
-    app: { name: 'Messengers of Hope', title: 'Messengers of Hope — Social Management' },
+    app: { name: 'Messengers of Hope', title: 'Messengers of Hope | Social Management' },
     lang: { name: 'English', switch: 'EN', other: 'PT' },
     nav: {
       dashboard: 'Dashboard',
@@ -226,7 +226,7 @@ const i18n = {
       eyebrow: 'Extension Project II · CS',
       title: 'Social Management',
       title_span: 'that transforms',
-      subtitle: 'NGO management system — course registration, enrollments, digital attendance tracking and full dashboard powered by Firebase.',
+      subtitle: 'A social management system for NGOs. Register courses, manage enrollments, track attendance and follow everything on the dashboard.',
       cta_login: 'Access the system',
       cta_more: 'Learn more'
     },
@@ -254,7 +254,7 @@ const i18n = {
       btn: 'Access the system'
     },
     footer: {
-      text: 'Messengers of Hope — Extension Project II (CS)',
+      text: 'Messengers of Hope · Extension Project II (CS)',
       tagline: 'Social management for NGOs with purpose.'
     },
     login: {
@@ -491,7 +491,7 @@ function applyTranslations() {
     el.textContent = t(el.getAttribute('data-i18n'));
   });
 
-  // Update lang switcher button text — always show the OTHER language code
+  // Update lang switcher button text - always show the OTHER language code
   document.querySelectorAll('[data-i18n-lang]').forEach(el => {
     el.textContent = t('lang.other');
   });
